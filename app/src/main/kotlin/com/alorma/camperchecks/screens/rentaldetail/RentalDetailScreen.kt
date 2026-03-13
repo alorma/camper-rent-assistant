@@ -1,4 +1,4 @@
-package com.alorma.camperchecks.screens.rentalslist
+package com.alorma.camperchecks.screens.rentaldetail
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,39 +10,47 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alorma.camperchecks.icons.AppIcons
+import com.alorma.camperchecks.icons.filled.ChevronRight
 import com.alorma.camperchecks.rental.Rental
 import com.alorma.camperchecks.ui.components.scaffold.AppScaffold
+import com.alorma.camperchecks.ui.components.topbar.NavigationIcon
 import com.alorma.camperchecks.ui.components.topbar.StyledTopAppBar
 import com.alorma.camperchecks.ui.theme.AppTheme
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
-fun RentalsListScreen(
-  onAddRental: () -> Unit,
-  onOpenRentalDetail: (rentalId: String) -> Unit,
-  viewModel: RentalsListViewModel = koinViewModel(),
+fun RentalDetailScreen(
+  rentalId: String,
+  onNavigateBack: () -> Unit,
+  onNavigateToChecklists: () -> Unit,
+  onNavigateToCondition: () -> Unit,
+  onNavigateToTaxes: () -> Unit,
+  onNavigateToContacts: () -> Unit,
+  viewModel: RentalDetailViewModel = koinViewModel(parameters = { parametersOf(rentalId) }),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   LaunchedEffect(Unit) {
     viewModel.navigationSideEffects.collect { effect ->
       when (effect) {
-        is RentalsListNavigationSideEffect.NavigateToRentalDetail ->
-          onOpenRentalDetail(effect.rentalId)
+        RentalDetailNavigationSideEffect.NavigateToChecklists -> onNavigateToChecklists()
+        RentalDetailNavigationSideEffect.NavigateToCondition -> onNavigateToCondition()
+        RentalDetailNavigationSideEffect.NavigateToTaxes -> onNavigateToTaxes()
+        RentalDetailNavigationSideEffect.NavigateToContacts -> onNavigateToContacts()
       }
     }
   }
@@ -50,19 +58,12 @@ fun RentalsListScreen(
   AppScaffold(
     topBar = {
       StyledTopAppBar(
-        title = { Text(text = "Rentals") },
-        actions = {
-          TextButton(onClick = viewModel::onSignOut) {
-            Text(text = "Sign out")
-          }
+        title = {
+          Text(
+            text = uiState.rental?.referenceId ?: "",
+          )
         },
-      )
-    },
-    floatingActionButton = {
-      ExtendedFloatingActionButton(
-        onClick = onAddRental,
-        text = { Text("Add rental") },
-        icon = {},
+        navigationIcon = { NavigationIcon() },
       )
     },
   ) { paddingValues ->
@@ -76,49 +77,42 @@ fun RentalsListScreen(
       ),
       verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-      uiState.currentRental?.let { rental ->
-        item(key = "current_header") {
-          SectionHeader(title = "Current rental")
-        }
-        item(key = "current_${rental.id}") {
-          CurrentRentalCard(
-            rental = rental,
-            onClick = { viewModel.navigate(RentalsListNavigation.OpenRentalDetail(rental.id)) },
-          )
+      uiState.rental?.let { rental ->
+        item(key = "rental_info") {
+          RentalInfoCard(rental = rental)
         }
       }
 
-      if (uiState.upcomingRentals.isNotEmpty()) {
-        item(key = "upcoming_header") {
-          SectionHeader(title = "Upcoming")
-        }
-        items(uiState.upcomingRentals, key = { it.id }) { rental ->
-          RentalListItem(
-            rental = rental,
-            onClick = { viewModel.navigate(RentalsListNavigation.OpenRentalDetail(rental.id)) },
-          )
-        }
+      item(key = "actions_header") {
+        SectionHeader(title = "Actions")
       }
 
-      if (uiState.pastRentals.isNotEmpty()) {
-        item(key = "past_header") {
-          SectionHeader(title = "Past")
-        }
-        items(uiState.pastRentals, key = { it.id }) { rental ->
-          RentalListItem(
-            rental = rental,
-            onClick = { viewModel.navigate(RentalsListNavigation.OpenRentalDetail(rental.id)) },
-          )
-        }
+      item(key = "checklists") {
+        HubActionItem(
+          label = "Checklists",
+          onClick = { viewModel.navigate(RentalDetailNavigation.Checklists) },
+        )
       }
 
-      if (uiState.currentRental == null &&
-        uiState.upcomingRentals.isEmpty() &&
-        uiState.pastRentals.isEmpty()
-      ) {
-        item(key = "empty") {
-          EmptyRentals()
-        }
+      item(key = "condition") {
+        HubActionItem(
+          label = "Condition",
+          onClick = { viewModel.navigate(RentalDetailNavigation.Condition) },
+        )
+      }
+
+      item(key = "taxes") {
+        HubActionItem(
+          label = "Taxes",
+          onClick = { viewModel.navigate(RentalDetailNavigation.Taxes) },
+        )
+      }
+
+      item(key = "contacts") {
+        HubActionItem(
+          label = "Contacts",
+          onClick = { viewModel.navigate(RentalDetailNavigation.Contacts) },
+        )
       }
     }
   }
@@ -138,14 +132,9 @@ private fun SectionHeader(title: String) {
 }
 
 @Composable
-private fun CurrentRentalCard(
-  rental: Rental,
-  onClick: () -> Unit,
-) {
+private fun RentalInfoCard(rental: Rental) {
   Card(
-    modifier = Modifier
-      .fillMaxWidth()
-      .clickable(onClick = onClick),
+    modifier = Modifier.fillMaxWidth(),
     colors = CardDefaults.cardColors(
       containerColor = AppTheme.colorScheme.primaryContainer,
     ),
@@ -179,37 +168,18 @@ private fun CurrentRentalCard(
 }
 
 @Composable
-private fun RentalListItem(
-  rental: Rental,
+private fun HubActionItem(
+  label: String,
   onClick: () -> Unit,
 ) {
   ListItem(
     modifier = Modifier.clickable(onClick = onClick),
-    headlineContent = { Text(text = rental.referenceId) },
-    supportingContent = { Text(text = "${rental.startAt.date} → ${rental.endAt.date}") },
-    overlineContent = { Text(text = rental.provider.displayName) },
-    trailingContent = { Text(text = rental.renterName) },
+    headlineContent = { Text(text = label) },
+    trailingContent = {
+      Icon(
+        imageVector = AppIcons.Filled.ChevronRight,
+        contentDescription = null,
+      )
+    },
   )
-}
-
-@Composable
-private fun EmptyRentals() {
-  Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(vertical = 48.dp),
-    verticalArrangement = Arrangement.Center,
-  ) {
-    Text(
-      text = "No rentals yet",
-      style = AppTheme.typography.headlineSmall,
-      color = AppTheme.colorScheme.onSurfaceVariant,
-    )
-    Spacer(modifier = Modifier.height(8.dp))
-    Text(
-      text = "Add your first rental to get started",
-      style = AppTheme.typography.bodyMedium,
-      color = AppTheme.colorScheme.outline,
-    )
-  }
 }

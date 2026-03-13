@@ -6,6 +6,8 @@ import kotlinx.datetime.LocalDateTime
 interface RentalDataSource {
   fun getRentals(): Flow<List<Rental>>
 
+  fun getRentalById(rentalId: String): Flow<Rental?>
+
   suspend fun saveRental(
     provider: RentalProvider,
     referenceId: String,

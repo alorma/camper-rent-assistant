@@ -18,6 +18,8 @@ import com.alorma.camperchecks.screens.login.LoginRoute
 import com.alorma.camperchecks.screens.login.LoginScreen
 import com.alorma.camperchecks.screens.onboarding.OnboardingRoute
 import com.alorma.camperchecks.screens.onboarding.OnboardingScreen
+import com.alorma.camperchecks.screens.rentaldetail.RentalDetailRoute
+import com.alorma.camperchecks.screens.rentaldetail.RentalDetailScreen
 import com.alorma.camperchecks.screens.rentalslist.RentalsListRoute
 import com.alorma.camperchecks.screens.rentalslist.RentalsListScreen
 import com.alorma.camperchecks.ui.components.loading.FullscreenLoading
@@ -73,11 +75,22 @@ private fun AppNavGraph(startKey: NavKey) {
         entry<RentalsListRoute> {
           RentalsListScreen(
             onAddRental = { appBackStack.add(AddRentalRoute) },
+            onOpenRentalDetail = { rentalId -> appBackStack.add(RentalDetailRoute(rentalId)) },
           )
         }
         entry<AddRentalRoute> {
           AddRentalScreen(
             onNavigateBack = { appBackStack.removeLast() },
+          )
+        }
+        entry<RentalDetailRoute> { route ->
+          RentalDetailScreen(
+            rentalId = route.rentalId,
+            onNavigateBack = { appBackStack.removeLast() },
+            onNavigateToChecklists = {},
+            onNavigateToCondition = {},
+            onNavigateToTaxes = {},
+            onNavigateToContacts = {},
           )
         }
       },
