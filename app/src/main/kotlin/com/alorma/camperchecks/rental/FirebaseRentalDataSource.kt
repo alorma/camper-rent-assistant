@@ -28,18 +28,23 @@ class FirebaseRentalDataSource(
       awaitClose { listener.remove() }
     }
 
-  override fun getRentalById(rentalId: String): Flow<Rental?> =
+  override fun getRentalById(rentalId: String): Flow<Result<Rental>> =
     callbackFlow {
       val listener =
         firestoreProvider.collection("rentals")
           .document(rentalId)
           .addSnapshotListener { snapshot, error ->
             if (error != null) {
-              Timber.e(error, "Error listening to rental $rentalId")
-              trySend(null)
+              Timber.tag("Alorma").e(error, "Error listening to rental $rentalId")
+              trySend(Result.failure(error))
               return@addSnapshotListener
             }
-            trySend(snapshot?.toRental())
+            val rental = snapshot?.toRental()
+            if (rental != null) {
+              trySend(Result.success(rental))
+            } else {
+              trySend(Result.failure(NoSuchElementException("Rental $rentalId not found")))
+            }
           }
       awaitClose { listener.remove() }
     }

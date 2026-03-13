@@ -10,5 +10,5 @@ val dashboardModule =
   module {
     viewModelOf(::RentalsListViewModel)
     viewModelOf(::AddRentalViewModel)
-    viewModel { params -> RentalDetailViewModel(rentalId = params.get(), rentalDataSource = get()) }
+    viewModelOf(::RentalDetailViewModel)
   }

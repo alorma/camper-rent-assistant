@@ -16,7 +16,7 @@ class RentalDetailViewModel(
 
   val uiState: StateFlow<RentalDetailUiState> =
     rentalDataSource.getRentalById(rentalId)
-      .map { rental -> RentalDetailUiState(rental = rental) }
+      .map { result -> RentalDetailUiState(rental = result.getOrNull()) }
       .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
