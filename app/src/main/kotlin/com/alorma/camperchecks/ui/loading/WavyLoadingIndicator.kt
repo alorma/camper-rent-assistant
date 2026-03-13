@@ -1,0 +1,20 @@
+package com.alorma.camperchecks.ui.components.loading
+
+import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+
+@Composable
+fun WavyLoadingIndicator(
+  modifier: Modifier = Modifier,
+  progress: Float? = null,
+) {
+  if (progress != null) {
+    CircularWavyProgressIndicator(
+      modifier = modifier,
+      progress = { progress },
+    )
+  } else {
+    CircularWavyProgressIndicator(modifier = modifier)
+  }
+}
