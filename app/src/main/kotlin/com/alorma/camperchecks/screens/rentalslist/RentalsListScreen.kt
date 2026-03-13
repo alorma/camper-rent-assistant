@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RentalsListScreen(
+  onAddRental: () -> Unit,
   viewModel: RentalsListViewModel = koinViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -42,6 +44,13 @@ fun RentalsListScreen(
             Text(text = "Sign out")
           }
         },
+      )
+    },
+    floatingActionButton = {
+      ExtendedFloatingActionButton(
+        onClick = onAddRental,
+        text = { Text("Add rental") },
+        icon = {},
       )
     },
   ) { paddingValues ->
