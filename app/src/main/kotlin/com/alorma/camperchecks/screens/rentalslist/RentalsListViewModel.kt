@@ -30,7 +30,12 @@ class RentalsListViewModel(
         initialValue = RentalsListUiState(),
       )
 
-  override fun navigate(navigation: RentalsListNavigation) = Unit
+  override fun navigate(navigation: RentalsListNavigation) {
+    when (navigation) {
+      is RentalsListNavigation.OpenRentalDetail ->
+        emitNavigationSideEffect(RentalsListNavigationSideEffect.NavigateToRentalDetail(navigation.rentalId))
+    }
+  }
 
   fun onSignOut() {
     session.signOut()
@@ -70,8 +75,12 @@ data class RentalsListUiState(
   val pastRentals: List<Rental> = emptyList(),
 )
 
-sealed interface RentalsListNavigation
+sealed interface RentalsListNavigation {
+  data class OpenRentalDetail(val rentalId: String) : RentalsListNavigation
+}
 
-sealed interface RentalsListNavigationSideEffect
+sealed interface RentalsListNavigationSideEffect {
+  data class NavigateToRentalDetail(val rentalId: String) : RentalsListNavigationSideEffect
+}
 
 sealed interface RentalsListSideEffect
