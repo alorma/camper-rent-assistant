@@ -1,0 +1,112 @@
+name: Create Issues from Backlog
+
+on:
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = [
+              { name: 'phase-1', color: '0075ca', description: 'Phase 1: Setup' },
+              { name: 'phase-2', color: 'e4e669', description: 'Phase 2: User Management' },
+              { name: 'phase-3', color: 'd73a4a', description: 'Phase 3: Core Features' },
+              { name: 'phase-4', color: '0e8a16', description: 'Phase 4: Advanced Features' },
+            ];
+
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                  color: label.color,
+                  description: label.description,
+                });
+                console.log(`Created label: ${label.name}`);
+              } catch (error) {
+                if (error.status === 422) {
+                  console.log(`Label already exists: ${label.name}`);
+                } else {
+                  throw error;
+                }
+              }
+            }
+
+      - name: Create issues from backlog
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issues = [
+              {
+                title: 'Set up Firebase Authentication with Google Sign-in',
+                body: '## Phase 1: Setup\n\nSet up Firebase Authentication with Google Sign-in to allow users to authenticate using their Google accounts.\n\n### Acceptance Criteria\n- [ ] Firebase project is configured\n- [ ] Google Sign-in provider is enabled\n- [ ] Users can sign in with Google\n- [ ] Authentication state persists across sessions',
+                labels: ['phase-1'],
+              },
+              {
+                title: 'Design user registration and login flow',
+                body: '## Phase 2: User Management\n\nDesign and implement the user registration and login flow for the application.\n\n### Acceptance Criteria\n- [ ] Registration screen is designed\n- [ ] Login screen is designed\n- [ ] User can register a new account\n- [ ] User can log in with existing credentials\n- [ ] Error states are handled gracefully',
+                labels: ['phase-2'],
+              },
+              {
+                title: 'Implement user profile management',
+                body: '## Phase 2: User Management\n\nImplement user profile management so users can view and edit their profile information.\n\n### Acceptance Criteria\n- [ ] User profile screen is created\n- [ ] Users can view their profile information\n- [ ] Users can update their name, photo, and contact details\n- [ ] Profile changes are persisted to Firebase',
+                labels: ['phase-2'],
+              },
+              {
+                title: 'Develop booking system',
+                body: '## Phase 3: Core Features\n\nDevelop the core booking system that allows customers to reserve campers.\n\n### Acceptance Criteria\n- [ ] Users can browse available campers\n- [ ] Users can select rental dates\n- [ ] Users can create a booking\n- [ ] Booking confirmation is sent\n- [ ] Bookings are visible in user dashboard',
+                labels: ['phase-3'],
+              },
+              {
+                title: 'Implement payment processing',
+                body: '## Phase 3: Core Features\n\nImplement payment processing so users can pay for their rentals.\n\n### Acceptance Criteria\n- [ ] Payment provider is integrated\n- [ ] Users can enter payment details securely\n- [ ] Payments are processed successfully\n- [ ] Payment receipts are generated\n- [ ] Failed payments are handled gracefully',
+                labels: ['phase-3'],
+              },
+              {
+                title: 'Create user reviews and ratings system',
+                body: '## Phase 4: Advanced Features\n\nCreate a reviews and ratings system so users can leave feedback on campers.\n\n### Acceptance Criteria\n- [ ] Users can leave a review after completing a rental\n- [ ] Users can rate campers on a scale (e.g. 1–5 stars)\n- [ ] Reviews are displayed on camper listings\n- [ ] Average rating is calculated and shown\n- [ ] Inappropriate reviews can be flagged',
+                labels: ['phase-4'],
+              },
+              {
+                title: 'Develop reporting tools for administrators',
+                body: '## Phase 4: Advanced Features\n\nDevelop reporting and analytics tools to help administrators monitor the platform.\n\n### Acceptance Criteria\n- [ ] Admin dashboard shows key metrics\n- [ ] Bookings report is available\n- [ ] Revenue report is available\n- [ ] User activity report is available\n- [ ] Reports can be exported',
+                labels: ['phase-4'],
+              },
+            ];
+
+            for (const issue of issues) {
+              const existing = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'all',
+              });
+
+              const alreadyExists = existing.data.some(
+                (i) => i.title === issue.title
+              );
+
+              if (alreadyExists) {
+                console.log(`Issue already exists: ${issue.title}`);
+                continue;
+              }
+
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: issue.title,
+                body: issue.body,
+                labels: issue.labels,
+              });
+              console.log(`Created issue: ${issue.title}`);
+            }
