@@ -129,15 +129,20 @@ jobs:
   deploy-firestore-rules:
     name: Deploy Firestore Rules
     runs-on: ubuntu-latest
-    # Only deploy when firebase/ files actually changed
-    if: |
-      contains(toJson(github.event.commits.*.modified), 'firebase/') ||
-      contains(toJson(github.event.commits.*.added), 'firebase/')
     steps:
       - name: Check out code
         uses: actions/checkout@v6
 
+      - name: Check for firebase/ changes
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            firebase:
+              - 'firebase/**'
+
       - name: Deploy Firestore rules
+        if: steps.changes.outputs.firebase == 'true'
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only firestore:rules --project camperchecks
