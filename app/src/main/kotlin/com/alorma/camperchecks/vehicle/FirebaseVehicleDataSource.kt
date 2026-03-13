@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
@@ -22,6 +23,23 @@ class FirebaseVehicleDataSource(
       when (state) {
         is SessionState.Authenticated -> vehicleFlow()
         else -> flowOf(null)
+      }
+    }
+
+  override fun getVehicleState(): Flow<VehicleState> =
+    session.state.flatMapLatest { state ->
+      when (state) {
+        is SessionState.Authenticated -> vehicleStateFlow()
+        SessionState.Loading -> flowOf(VehicleState.Loading)
+        SessionState.Unauthenticated -> flowOf(VehicleState.NotFound)
+      }
+    }
+
+  private fun vehicleStateFlow(): Flow<VehicleState> =
+    flow {
+      emit(VehicleState.Loading)
+      vehicleFlow().collect { vehicle ->
+        emit(if (vehicle != null) VehicleState.Found(vehicle) else VehicleState.NotFound)
       }
     }
 

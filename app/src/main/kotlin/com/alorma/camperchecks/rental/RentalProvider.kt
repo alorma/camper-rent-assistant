@@ -1,23 +1,23 @@
 package com.alorma.camperchecks.rental
 
-sealed class RentalProvider {
-  abstract val id: String
-  abstract val displayName: String
-
-  data object Yescapa : RentalProvider() {
-    override val id: String = "rent:provider:yescapa"
-    override val displayName: String = "Yescapa"
-  }
+sealed class RentalProvider(
+  val id: String,
+  val displayName: String,
+) {
+  data object Yescapa : RentalProvider(
+    id = "rent:provider:yescapa",
+    displayName = "Yescapa",
+  )
 
   data class Other(
-    override val id: String,
-    override val displayName: String,
-  ) : RentalProvider()
+    val providerId: String,
+    val providerDisplayName: String,
+  ) : RentalProvider(id = providerId, displayName = providerDisplayName)
 
   companion object {
     val all: List<RentalProvider> = listOf(Yescapa)
 
     fun fromId(id: String): RentalProvider =
-      all.find { it.id == id } ?: Other(id = id, displayName = "Other")
+      all.find { it.id == id } ?: Other(providerId = id, providerDisplayName = "Other")
   }
 }

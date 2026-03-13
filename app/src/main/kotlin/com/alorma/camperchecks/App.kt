@@ -12,33 +12,21 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.alorma.camperchecks.auth.Session
-import com.alorma.camperchecks.auth.SessionState
 import com.alorma.camperchecks.screens.addrental.AddRentalRoute
 import com.alorma.camperchecks.screens.addrental.AddRentalScreen
-import com.alorma.camperchecks.screens.rentalslist.RentalsListRoute
-import com.alorma.camperchecks.screens.rentalslist.RentalsListScreen
 import com.alorma.camperchecks.screens.login.LoginRoute
 import com.alorma.camperchecks.screens.login.LoginScreen
 import com.alorma.camperchecks.screens.onboarding.OnboardingRoute
 import com.alorma.camperchecks.screens.onboarding.OnboardingScreen
+import com.alorma.camperchecks.screens.rentalslist.RentalsListRoute
+import com.alorma.camperchecks.screens.rentalslist.RentalsListScreen
 import com.alorma.camperchecks.ui.components.loading.FullscreenLoading
-import com.alorma.camperchecks.vehicle.VehicleDataSource
-import kotlinx.coroutines.flow.combine
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun App() {
-  val session: Session = koinInject()
-  val vehicleDataSource: VehicleDataSource = koinInject()
-
-  val startKey by combine(session.state, vehicleDataSource.getVehicle()) { sessionState, vehicle ->
-    when (sessionState) {
-      SessionState.Loading -> null
-      SessionState.Unauthenticated -> LoginRoute
-      is SessionState.Authenticated -> if (vehicle == null) OnboardingRoute else RentalsListRoute
-    }
-  }.collectAsStateWithLifecycle(initialValue = null)
+  val viewModel: AppViewModel = koinViewModel()
+  val startKey by viewModel.startKey.collectAsStateWithLifecycle()
 
   when (val key = startKey) {
     null -> FullscreenLoading()
