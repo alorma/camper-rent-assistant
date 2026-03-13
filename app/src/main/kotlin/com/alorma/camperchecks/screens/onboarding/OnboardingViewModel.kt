@@ -20,7 +20,7 @@ class OnboardingViewModel(
   override fun navigate(navigation: OnboardingNavigation) {
     when (navigation) {
       OnboardingNavigation.VehicleSaved ->
-        emitNavigationSideEffect(OnboardingNavigationSideEffect.NavigateToDashboard)
+        emitNavigationSideEffect(OnboardingNavigationSideEffect.NavigateToRentalsList)
     }
   }
 
@@ -70,7 +70,7 @@ sealed interface OnboardingNavigation {
 }
 
 sealed interface OnboardingNavigationSideEffect {
-  data object NavigateToDashboard : OnboardingNavigationSideEffect
+  data object NavigateToRentalsList : OnboardingNavigationSideEffect
 }
 
 sealed interface OnboardingSideEffect

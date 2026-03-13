@@ -2,7 +2,8 @@ package com.alorma.camperchecks.vehicle
 
 import com.alorma.camperchecks.auth.Session
 import com.alorma.camperchecks.auth.SessionState
-import com.google.firebase.firestore.FirebaseFirestore
+import com.alorma.camperchecks.firestore.UserFirestoreProvider
+import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -12,14 +13,14 @@ import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 class FirebaseVehicleDataSource(
-  private val firestore: FirebaseFirestore,
+  private val firestoreProvider: UserFirestoreProvider,
   private val session: Session,
 ) : VehicleDataSource {
 
   override fun getVehicle(): Flow<Vehicle?> =
     session.state.flatMapLatest { state ->
       when (state) {
-        is SessionState.Authenticated -> vehicleFlow(state.user.uid)
+        is SessionState.Authenticated -> vehicleFlow()
         else -> flowOf(null)
       }
     }
@@ -28,8 +29,7 @@ class FirebaseVehicleDataSource(
     name: String,
     plate: String,
   ) {
-    val uid = session.currentUid() ?: error("Cannot save vehicle: user not authenticated")
-    val doc = vehiclesCollection(uid).document()
+    val doc = firestoreProvider.collection("vehicles").document()
     doc.set(
       mapOf(
         "id" to doc.id,
@@ -39,10 +39,10 @@ class FirebaseVehicleDataSource(
     ).await()
   }
 
-  private fun vehicleFlow(uid: String): Flow<Vehicle?> =
+  private fun vehicleFlow(): Flow<Vehicle?> =
     callbackFlow {
       val listener =
-        vehiclesCollection(uid)
+        firestoreProvider.collection("vehicles")
           .limit(1)
           .addSnapshotListener { snapshot, error ->
             if (error != null) {
@@ -50,22 +50,15 @@ class FirebaseVehicleDataSource(
               trySend(null)
               return@addSnapshotListener
             }
-            val vehicle = snapshot?.documents?.firstOrNull()?.toVehicle()
-            trySend(vehicle)
+            trySend(snapshot?.documents?.firstOrNull()?.toVehicle())
           }
       awaitClose { listener.remove() }
     }
 
-  private fun vehiclesCollection(uid: String) =
-    firestore.collection("users").document(uid).collection("vehicles")
-
-  private fun com.google.firebase.firestore.DocumentSnapshot.toVehicle(): Vehicle? {
+  private fun DocumentSnapshot.toVehicle(): Vehicle? {
     val id = getString("id") ?: return null
     val name = getString("name") ?: return null
     val plate = getString("plate") ?: return null
     return Vehicle(id = id, name = name, plate = plate)
   }
 }
-
-private fun Session.currentUid(): String? =
-  (state.value as? SessionState.Authenticated)?.user?.uid

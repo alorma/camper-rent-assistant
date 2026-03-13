@@ -6,7 +6,6 @@ plugins {
 
   alias(libs.plugins.jetbrains.compose.compiler)
 
-  alias(libs.plugins.google.ksp)
   alias(libs.plugins.jetbrains.kotlin.serialization)
 
   alias(libs.plugins.jetbrains.kotlin.parcelize)
@@ -115,10 +114,6 @@ kotlin {
   }
 }
 
-ksp {
-  arg("room.schemaLocation", "$projectDir/schemas")
-}
-
 dependencies {
   implementation(projects.icons)
 
@@ -163,10 +158,7 @@ dependencies {
   implementation(libs.androidx.activitycompose)
   implementation(libs.androidx.appcompat)
 
-  implementation(libs.androidx.room.runtime)
-  implementation(libs.androidx.room.ktx)
   debugImplementation(libs.androidx.ui.tooling)
-  ksp(libs.androidx.room.compiler)
 
   implementation(libs.androidx.work.runtime.ktx)
   implementation(libs.koin.androidx.workmanager)
@@ -209,9 +201,4 @@ dependencies {
   testImplementation(libs.koin.test)
   testImplementation(libs.koin.test.junit4)
 
-  // Room testing
-  testImplementation(libs.androidx.room.runtime)
-  testImplementation(libs.androidx.room.ktx)
-  testImplementation(libs.androidx.test.runner)
-  testImplementation(libs.androidx.test.rules)
 }

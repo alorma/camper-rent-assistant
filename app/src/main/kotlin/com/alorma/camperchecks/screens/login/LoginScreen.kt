@@ -25,7 +25,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LoginScreen(
-  onNavigateToDashboard: () -> Unit,
+  onNavigateToRentalsList: () -> Unit,
   viewModel: LoginViewModel = koinViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -33,7 +33,7 @@ fun LoginScreen(
   LaunchedEffect(Unit) {
     viewModel.navigationSideEffects.collect { effect ->
       when (effect) {
-        LoginNavigationSideEffect.NavigateToDashboard -> onNavigateToDashboard()
+        LoginNavigationSideEffect.NavigateToRentalsList -> onNavigateToRentalsList()
       }
     }
   }

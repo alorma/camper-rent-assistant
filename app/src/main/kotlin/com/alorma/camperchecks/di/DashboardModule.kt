@@ -1,9 +1,9 @@
 package com.alorma.camperchecks.di
 
-import com.alorma.camperchecks.screens.dashboard.DashboardViewModel
+import com.alorma.camperchecks.screens.rentalslist.RentalsListViewModel
 import org.koin.dsl.module
 
 val dashboardModule =
   module {
-    factory { DashboardViewModel(get()) }
+    factory { RentalsListViewModel(get(), get(), get()) }
   }

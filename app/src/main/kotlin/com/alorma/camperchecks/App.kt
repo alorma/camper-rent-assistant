@@ -14,8 +14,8 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.alorma.camperchecks.auth.Session
 import com.alorma.camperchecks.auth.SessionState
-import com.alorma.camperchecks.screens.dashboard.DashboardRoute
-import com.alorma.camperchecks.screens.dashboard.DashboardScreen
+import com.alorma.camperchecks.screens.rentalslist.RentalsListRoute
+import com.alorma.camperchecks.screens.rentalslist.RentalsListScreen
 import com.alorma.camperchecks.screens.login.LoginRoute
 import com.alorma.camperchecks.screens.login.LoginScreen
 import com.alorma.camperchecks.screens.onboarding.OnboardingRoute
@@ -34,7 +34,7 @@ fun App() {
     when (sessionState) {
       SessionState.Loading -> null
       SessionState.Unauthenticated -> LoginRoute
-      is SessionState.Authenticated -> if (vehicle == null) OnboardingRoute else DashboardRoute
+      is SessionState.Authenticated -> if (vehicle == null) OnboardingRoute else RentalsListRoute
     }
   }.collectAsStateWithLifecycle(initialValue = null)
 
@@ -66,22 +66,22 @@ private fun AppNavGraph(startKey: NavKey) {
       entryProvider {
         entry<LoginRoute> {
           LoginScreen(
-            onNavigateToDashboard = {
+            onNavigateToRentalsList = {
               appBackStack.clear()
-              appBackStack.add(DashboardRoute)
+              appBackStack.add(RentalsListRoute)
             },
           )
         }
         entry<OnboardingRoute> {
           OnboardingScreen(
-            onNavigateToDashboard = {
+            onNavigateToRentalsList = {
               appBackStack.clear()
-              appBackStack.add(DashboardRoute)
+              appBackStack.add(RentalsListRoute)
             },
           )
         }
-        entry<DashboardRoute> {
-          DashboardScreen()
+        entry<RentalsListRoute> {
+          RentalsListScreen()
         }
       },
   )

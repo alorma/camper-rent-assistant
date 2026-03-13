@@ -18,7 +18,7 @@ class LoginViewModel(
 
   override fun navigate(navigation: LoginNavigation) {
     when (navigation) {
-      LoginNavigation.SignedIn -> emitNavigationSideEffect(LoginNavigationSideEffect.NavigateToDashboard)
+      LoginNavigation.SignedIn -> emitNavigationSideEffect(LoginNavigationSideEffect.NavigateToRentalsList)
     }
   }
 
@@ -64,7 +64,7 @@ sealed interface LoginNavigation {
 }
 
 sealed interface LoginNavigationSideEffect {
-  data object NavigateToDashboard : LoginNavigationSideEffect
+  data object NavigateToRentalsList : LoginNavigationSideEffect
 }
 
 sealed interface LoginSideEffect
