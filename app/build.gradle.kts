@@ -66,9 +66,9 @@ android {
         keyPassword = System.getenv("KEY_PASSWORD") ?: "no_value"
       } else {
         storeFile = fakeKeystoreFile
-        storePassword = "CamperChecks"
-        keyAlias = "CamperChecks"
-        keyPassword = "CamperChecks"
+        storePassword = "caducity"
+        keyAlias = "caducity"
+        keyPassword = "caducity"
       }
     }
     named("debug") {
