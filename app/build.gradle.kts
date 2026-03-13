@@ -192,6 +192,7 @@ dependencies {
   implementation(libs.androidx.credentials)
   implementation(libs.androidx.credentials.play.services.auth)
   implementation(libs.google.identity.googleid)
+  implementation(libs.google.signin.button)
 
   // Google Play In-App Review
   implementation(libs.play.review)

@@ -28,16 +28,13 @@ fun App() {
 
   when (sessionState) {
     SessionState.Loading -> FullscreenLoading()
-    SessionState.Unauthenticated -> AppNavGraph(startKey = LoginRoute, session = session)
-    is SessionState.Authenticated -> AppNavGraph(startKey = DashboardRoute, session = session)
+    SessionState.Unauthenticated -> AppNavGraph(startKey = LoginRoute)
+    is SessionState.Authenticated -> AppNavGraph(startKey = DashboardRoute)
   }
 }
 
 @Composable
-private fun AppNavGraph(
-  startKey: NavKey,
-  session: Session,
-) {
+private fun AppNavGraph(startKey: NavKey) {
   val appBackStack =
     retain(startKey::class.java.name) {
       mutableStateListOf<NavKey>(startKey)
@@ -65,9 +62,7 @@ private fun AppNavGraph(
           )
         }
         entry<DashboardRoute> {
-          DashboardScreen(
-            onSignOut = { session.signOut() },
-          )
+          DashboardScreen()
         }
       },
   )

@@ -6,4 +6,5 @@ val appModule =
   module {
     includes(themeModule)
     includes(authModule)
+    includes(dashboardModule)
   }

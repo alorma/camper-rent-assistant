@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import com.joyner.googlesignincomposelibrary.models.types.Outlined
+import com.joyner.googlesignincomposelibrary.ui.GoogleSignInButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -91,7 +92,8 @@ fun LoginScreen(
 
 @Composable
 private fun SignInWithGoogleButton(onClick: () -> Unit) {
-  Button(onClick = onClick) {
-    Text(text = "Sign in with Google")
-  }
+  GoogleSignInButton(
+    onClick = onClick,
+    buttonType = Outlined(),
+  )
 }
