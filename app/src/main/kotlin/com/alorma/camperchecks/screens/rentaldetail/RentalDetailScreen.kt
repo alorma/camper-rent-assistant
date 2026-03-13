@@ -60,7 +60,7 @@ fun RentalDetailScreen(
       StyledTopAppBar(
         title = {
           Text(
-            text = uiState.rental?.referenceId ?: "",
+            text = uiState.rental?.referenceId ?: "Rental detail",
           )
         },
         navigationIcon = { NavigationIcon() },
