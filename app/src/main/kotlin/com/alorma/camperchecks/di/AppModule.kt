@@ -1,5 +1,6 @@
 package com.alorma.camperchecks.di
 
+import com.russhwolf.settings.Settings
 import org.koin.dsl.module
 
 val appModule =
@@ -9,4 +10,6 @@ val appModule =
     includes(vehicleModule)
     includes(onboardingModule)
     includes(dashboardModule)
+
+    single { Settings() }
   }

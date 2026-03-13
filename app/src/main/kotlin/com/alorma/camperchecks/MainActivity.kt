@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
 import com.alorma.camperchecks.ui.theme.AndroidSystemBarsAppearance
+import com.alorma.camperchecks.ui.theme.AppTheme
 import com.alorma.camperchecks.ui.theme.LocalSystemBarsAppearance
 
 class MainActivity : ComponentActivity() {
@@ -15,10 +16,12 @@ class MainActivity : ComponentActivity() {
     enableEdgeToEdge()
 
     setContent {
-      CompositionLocalProvider(
-        LocalSystemBarsAppearance provides AndroidSystemBarsAppearance(this),
-      ) {
-        App()
+      AppTheme {
+        CompositionLocalProvider(
+          LocalSystemBarsAppearance provides AndroidSystemBarsAppearance(this),
+        ) {
+          App()
+        }
       }
     }
   }
