@@ -1,0 +1,201 @@
+name: Generate Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  get-version:
+    name: Get Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: adopt
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: wrapper
+          cache-read-only: false
+
+      - name: Disable snapshot before release
+        uses: ./.github/actions/disable-snapshot
+
+      - name: Get current version
+        id: get_version
+        run: |
+          CURRENT_VERSION=$(./gradlew -q printVersionName)
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "Current version to publish: $CURRENT_VERSION"
+
+          echo "**Version from:** \`$CURRENT_VERSION\`" >> $GITHUB_STEP_SUMMARY
+
+  build:
+    name: Build Release AAB and APK
+    runs-on: ubuntu-latest
+    needs: [ get-version ]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: adopt
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: wrapper
+          cache-read-only: false
+
+      - name: Disable snapshot before release
+        uses: ./.github/actions/disable-snapshot
+
+      - name: Create google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -d > app/google-services.json
+
+      - name: Decode Keystore
+        run: |
+          mkdir -p certs
+          echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > certs/release.keystore
+
+      - name: Build release AAB and APK
+        run: |
+          ./gradlew :app:bundleRelease
+          ./gradlew :app:assembleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          DEBUG_APP_CHECK_TOKEN: ${{ secrets.DEBUG_APP_CHECK_TOKEN }}
+
+      - name: Prepare artifacts for upload
+        run: |
+          mkdir -p artifacts/aab
+          cp app/build/outputs/bundle/release/app-release.aab artifacts/aab/
+          cp app/build/outputs/mapping/release/mapping.txt artifacts/aab/
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-aab
+          path: artifacts/aab/
+          retention-days: 30
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-apk
+          path: app/build/outputs/apk/release/app-release.apk
+          retention-days: 30
+
+  deploy-google-play:
+    name: Deploy to Google Play
+    runs-on: ubuntu-latest
+    needs: [ get-version, build ]
+    permissions:
+      contents: read
+
+    steps:
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: release-aab
+          path: artifacts/aab
+
+      - name: Upload to Google Play Production Track
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: com.alorma.camperchecks
+          releaseFiles: artifacts/aab/app-release.aab
+          track: production
+          releaseName: "${{ needs.get-version.outputs.version }}"
+          mappingFile: artifacts/aab/mapping.txt
+
+  create-github-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [ get-version, build, deploy-google-play ]
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: release-apk
+          path: artifacts/apk
+
+      - name: Create tag and GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.get-version.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          TAG_NAME="${VERSION}"
+          echo "Creating tag: $TAG_NAME"
+
+          # Create and push tag
+          git tag -a "$TAG_NAME" -m "$TAG_NAME"
+          git push origin "$TAG_NAME"
+
+          # Create release with auto-generated notes and attach APK
+          gh release create "$TAG_NAME" \
+            --title "Release $TAG_NAME" \
+            --generate-notes \
+            --target main \
+            artifacts/apk/app-release.apk
+
+  update-version:
+    name: Update Version for Next Release
+    runs-on: ubuntu-latest
+    needs: [ get-version, deploy-google-play, create-github-release ]
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bump minor version
+        id: bump
+        uses: ./.github/actions/bump-minor-version
+
+      - name: Commit version changes
+        uses: ./.github/actions/commit-version
+        with:
+          version: ${{ steps.bump.outputs.next_version }}
