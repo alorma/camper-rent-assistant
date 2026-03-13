@@ -1,0 +1,4 @@
+<resources>
+
+    <style name="Theme.CamperChecks" parent="Theme.MaterialComponents.Light" />
+</resources>
