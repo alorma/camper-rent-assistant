@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.alorma.camperchecks.dev" />
+                  <option name="mobileSdkAppId" value="1:412331751935:android:ed386d0898de51c793cfca" />
+                  <option name="projectId" value="camperchecks" />
+                  <option name="projectNumber" value="412331751935" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
