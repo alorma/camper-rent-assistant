@@ -1,0 +1,29 @@
+package com.alorma.camperchecks.ui.screen.settings.components
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.alorma.compose.settings.ui.expressive.SettingsGroup
+
+/**
+ * A styled settings group that wraps content with proper spacing.
+ * Use this to group related settings items together.
+ *
+ * @param modifier Optional modifier for the group
+ * @param content The settings items to display within the group
+ */
+@Composable
+fun StyledSettingsGroup(
+  modifier: Modifier = Modifier,
+  title: @Composable (() -> Unit)? = null,
+  content: @Composable ColumnScope.() -> Unit,
+) {
+  SettingsGroup(
+    modifier = modifier,
+    verticalArrangement = Arrangement.spacedBy(2.dp),
+    title = title,
+    content = content,
+  )
+}
