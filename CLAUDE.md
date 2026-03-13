@@ -100,6 +100,14 @@ Every screen ViewModel extends `BaseViewModel<NavigationIntent, NavigationSideEf
 - Logging: use **Timber** (not `Log`)
 - Previews: use `@PreviewDynamicLightDark` + `PreviewTheme { }` wrappers (in `ui/theme/preview/`)
 
+## SDK Abstraction Convention
+**Never use external SDKs directly in feature code.** Always create an interface + Impl pattern:
+- Define a clean interface (e.g. `Session`, `GoogleSignInProvider`, `ThemePreferences`) in the domain package
+- Put SDK-specific code exclusively in the `*Impl` class
+- Bind interface → Impl via Koin in a dedicated `*Module.kt`
+- This applies to: Firebase Auth, Firestore, Credential Manager, Room, RemoteConfig, etc.
+- Example: `auth/Session.kt` (interface) + `auth/SessionImpl.kt` (Firebase) — never call `FirebaseAuth` from a ViewModel or Screen
+
 ## Firebase / Security
 - **App Check**: Play Integrity in release; debug token read from `local.properties` key `DEBUG_APP_CHECK_TOKEN` or env var `DEBUG_APP_CHECK_TOKEN` — exposed as `BuildConfig.DEBUG_APP_CHECK_TOKEN`
 - **Auth**: Google Sign-In only — block all data access when signed out
@@ -122,3 +130,5 @@ Labels: `type:`, `priority:`, `area:` — milestone: `v1 (MVP)`
 - Do not commit `google-services.json` or real keystore files
 - Do not modify `versionCode`/`versionName` directly — edit `version.properties`
 - Do not use `MaterialTheme` directly in app code — use `AppTheme` object instead
+- Do not call Firebase, Credential Manager, or any external SDK directly from ViewModels or Screens — always go through the interface layer
+- Do not use `androidx.compose.material:material-icons-*` (extended or core). All icons must come from the `:icons` module. When an icon is needed, add it to `:icons` or ask the user to add it

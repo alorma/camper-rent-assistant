@@ -35,12 +35,12 @@ import com.alorma.camperchecks.ui.components.feedback.AppFeedbackResource
 import com.alorma.camperchecks.ui.components.feedback.AppFeedbackType
 import com.alorma.camperchecks.ui.components.feedback.exposeResource
 import com.alorma.camperchecks.ui.components.feedback.vibrantColors
-import kotlin.coroutines.resume
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlin.coroutines.resume
 
 @Composable
 fun rememberAppSnackbarState(): AppSnackbarState =

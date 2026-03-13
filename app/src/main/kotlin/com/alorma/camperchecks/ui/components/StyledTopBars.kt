@@ -15,9 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
-import com.alorma.camperchecks.ui.theme.preview.PreviewTheme
 import com.alorma.camperchecks.icons.AppIcons
 import com.alorma.camperchecks.icons.filled.Back
+import com.alorma.camperchecks.ui.theme.preview.PreviewTheme
 
 @Composable
 fun NavigationIcon() {

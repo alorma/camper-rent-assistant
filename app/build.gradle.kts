@@ -1,5 +1,5 @@
-import java.util.Properties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
   alias(libs.plugins.android.application)
@@ -13,6 +13,7 @@ plugins {
 
   alias(libs.plugins.google.services)
   alias(libs.plugins.firebase.crashlytics)
+  alias(libs.plugins.ktlint)
 
   id("camperchecks.version")
 }
@@ -42,7 +43,7 @@ android {
         val properties = Properties()
         properties.load(localProperties.inputStream())
         properties.getProperty("DEBUG_APP_CHECK_TOKEN") ?: System.getenv("DEBUG_APP_CHECK_TOKEN")
-        ?: ""
+          ?: ""
       } else {
         System.getenv("DEBUG_APP_CHECK_TOKEN") ?: ""
       }
@@ -185,6 +186,12 @@ dependencies {
   implementation(libs.firebase.crashlytics)
   implementation(libs.firebase.config)
   implementation(libs.firebase.analytics)
+  implementation(libs.firebase.auth)
+
+  // Credential Manager (Google Sign-In)
+  implementation(libs.androidx.credentials)
+  implementation(libs.androidx.credentials.play.services.auth)
+  implementation(libs.google.identity.googleid)
 
   // Google Play In-App Review
   implementation(libs.play.review)

@@ -8,8 +8,7 @@ import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 
-class AppApplication: Application() {
-
+class AppApplication : Application() {
   override fun onCreate() {
     super.onCreate()
 
@@ -19,7 +18,5 @@ class AppApplication: Application() {
       workManagerFactory() // Enable Koin WorkManager integration
       modules(appModule)
     }
-
   }
-
 }

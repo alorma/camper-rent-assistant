@@ -8,7 +8,8 @@ import com.alorma.camperchecks.R
 
 val TYPOGRAPHY = Typography()
 
-fun camperChecksTypography() = Typography(
+fun camperChecksTypography() =
+  Typography(
     displayLarge =
       TYPOGRAPHY.displayLarge.copy(
         fontFamily = AppFonts.googleFlex600,

@@ -19,10 +19,10 @@ import androidx.compose.ui.window.DialogProperties
 import com.alorma.camperchecks.ui.components.feedback.AppFeedbackType
 import com.alorma.camperchecks.ui.components.feedback.softColors
 import com.alorma.camperchecks.ui.components.feedback.vibrantColors
-import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlin.coroutines.resume
 
 /**
  * Creates a [AppDialogState].
