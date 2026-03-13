@@ -18,18 +18,29 @@ import com.alorma.camperchecks.screens.dashboard.DashboardRoute
 import com.alorma.camperchecks.screens.dashboard.DashboardScreen
 import com.alorma.camperchecks.screens.login.LoginRoute
 import com.alorma.camperchecks.screens.login.LoginScreen
+import com.alorma.camperchecks.screens.onboarding.OnboardingRoute
+import com.alorma.camperchecks.screens.onboarding.OnboardingScreen
 import com.alorma.camperchecks.ui.components.loading.FullscreenLoading
+import com.alorma.camperchecks.vehicle.VehicleDataSource
+import kotlinx.coroutines.flow.combine
 import org.koin.compose.koinInject
 
 @Composable
 fun App() {
   val session: Session = koinInject()
-  val sessionState by session.state.collectAsStateWithLifecycle()
+  val vehicleDataSource: VehicleDataSource = koinInject()
 
-  when (sessionState) {
-    SessionState.Loading -> FullscreenLoading()
-    SessionState.Unauthenticated -> AppNavGraph(startKey = LoginRoute)
-    is SessionState.Authenticated -> AppNavGraph(startKey = DashboardRoute)
+  val startKey by combine(session.state, vehicleDataSource.getVehicle()) { sessionState, vehicle ->
+    when (sessionState) {
+      SessionState.Loading -> null
+      SessionState.Unauthenticated -> LoginRoute
+      is SessionState.Authenticated -> if (vehicle == null) OnboardingRoute else DashboardRoute
+    }
+  }.collectAsStateWithLifecycle(initialValue = null)
+
+  when (val key = startKey) {
+    null -> FullscreenLoading()
+    else -> AppNavGraph(startKey = key)
   }
 }
 
@@ -55,6 +66,14 @@ private fun AppNavGraph(startKey: NavKey) {
       entryProvider {
         entry<LoginRoute> {
           LoginScreen(
+            onNavigateToDashboard = {
+              appBackStack.clear()
+              appBackStack.add(DashboardRoute)
+            },
+          )
+        }
+        entry<OnboardingRoute> {
+          OnboardingScreen(
             onNavigateToDashboard = {
               appBackStack.clear()
               appBackStack.add(DashboardRoute)

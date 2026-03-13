@@ -9,6 +9,7 @@ permissions:
   contents: read
   checks: write
   statuses: write
+  id-token: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -124,3 +125,22 @@ jobs:
           name: camperchecks-debug-apk
           path: app/build/outputs/apk/release/*.apk
           retention-days: 5
+
+  deploy-firestore-rules:
+    name: Deploy Firestore Rules
+    runs-on: ubuntu-latest
+    # Only deploy when firebase/ files actually changed
+    if: |
+      contains(toJson(github.event.commits.*.modified), 'firebase/') ||
+      contains(toJson(github.event.commits.*.added), 'firebase/')
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Deploy Firestore rules
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only firestore:rules --project camperchecks
+        env:
+          GCP_SA_KEY: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          PROJECT_PATH: ./firebase
