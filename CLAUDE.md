@@ -79,6 +79,19 @@ version.properties    # Canonical version source (major.minor.patch.snapshot)
 - **AppTheme** (object): access `AppTheme.colorScheme`, `.typography`, `.shapes`, `.dims`, `.isDark` from any composable — backed by `MaterialExpressiveTheme` with `MotionScheme.expressive()`
 - **ThemePreferences**: Koin singleton (`ThemePreferencesImpl`) holding `themeMode` and `useDynamicColors` state; injected into `AppTheme` composable
 
+### BaseViewModel pattern
+Every screen ViewModel extends `BaseViewModel<NavigationIntent, NavigationSideEffect, SideEffect>` (`ui/base/BaseViewModel.kt`):
+- **NavigationIntent**: sealed class of user actions that trigger navigation (e.g. `DashboardNavigation.Settings`)
+- **NavigationSideEffect**: one-shot navigation events emitted to the UI (e.g. `NavigateToSettings`)
+- **SideEffect**: one-shot non-navigation UI events (snackbars, dialogs, bottom sheets)
+- Override `navigate(NavigationIntent)` → call `emitNavigationSideEffect()`; call `emitSideEffect()` for UI feedback
+- Collect both `navigationSideEffects` and `sideEffects` flows in the Screen composable
+
+### Navigation3 screen pattern
+- Each screen has a `*Route` object/data class annotated `@Serializable`, used as the `NavKey`
+- Screens live under `screens/<feature>/` — `*Route.kt` + `*Screen.kt` (+ `*ViewModel.kt` when needed)
+- Register new routes in the `entryProvider` block in `App.kt`; mutate `appBackStack` to navigate
+
 ## Code Conventions
 - Follow ktlint rules — run `ktlintFormat` before committing
 - Use `@Serializable` for Navigation3 route data classes

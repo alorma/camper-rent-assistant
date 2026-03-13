@@ -4,6 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.alorma.camperchecks.ui.components.scaffold.AppScaffold
 import com.alorma.camperchecks.ui.components.topbar.StyledTopAppBar
+import com.alorma.camperchecks.ui.responsive.ResponsiveCenteredContainer
 
 @Composable
 fun DashboardScreen() {
@@ -14,6 +15,8 @@ fun DashboardScreen() {
       )
     },
   ) {
-    Text(text = "Dasboard")
+    ResponsiveCenteredContainer {
+      Text(text = "Dasboard")
+    }
   }
 }

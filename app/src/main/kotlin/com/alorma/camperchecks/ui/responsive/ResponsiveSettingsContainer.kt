@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun ResponsiveCenteredContainer(
-  maxWidth: Dp = 600.dp,
   modifier: Modifier = Modifier,
+  maxWidth: Dp = 600.dp,
   fillHeight: Boolean = true,
   content: @Composable () -> Unit,
 ) {
