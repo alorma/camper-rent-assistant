@@ -21,3 +21,5 @@ certs/release.keystore
 
 # Firebase configuration (contains API keys)
 app/google-services.json
+
+.idea/
