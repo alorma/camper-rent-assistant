@@ -43,7 +43,6 @@ fun RentalDetailScreen(
 
   LaunchedEffect(Unit) {
     viewModel.navigationSideEffects.collect { effect ->
-
     }
   }
 

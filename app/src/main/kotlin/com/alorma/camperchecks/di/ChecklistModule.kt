@@ -6,7 +6,8 @@ import com.alorma.camperchecks.screens.checklisttemplates.ChecklistTemplatesView
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-val checklistModule = module {
+val checklistModule =
+  module {
     single<ChecklistTemplateDataSource> {
       FirebaseChecklistTemplateDataSource(firestoreProvider = get())
     }
