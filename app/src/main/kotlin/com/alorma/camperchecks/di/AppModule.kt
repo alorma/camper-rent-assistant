@@ -16,6 +16,7 @@ val appModule =
     includes(onboardingModule)
     includes(dashboardModule)
     includes(rentalModule)
+    includes(checklistModule)
 
     single { Settings() }
     single<AppClock> { KotlinAppClock() }

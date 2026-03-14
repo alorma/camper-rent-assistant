@@ -37,23 +37,12 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun RentalDetailScreen(
   rentalId: String,
-  onNavigateBack: () -> Unit,
-  onNavigateToChecklists: () -> Unit,
-  onNavigateToCondition: () -> Unit,
-  onNavigateToTaxes: () -> Unit,
-  onNavigateToContacts: () -> Unit,
   viewModel: RentalDetailViewModel = koinViewModel(parameters = { parametersOf(rentalId) }),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   LaunchedEffect(Unit) {
     viewModel.navigationSideEffects.collect { effect ->
-      when (effect) {
-        RentalDetailNavigationSideEffect.NavigateToChecklists -> onNavigateToChecklists()
-        RentalDetailNavigationSideEffect.NavigateToCondition -> onNavigateToCondition()
-        RentalDetailNavigationSideEffect.NavigateToTaxes -> onNavigateToTaxes()
-        RentalDetailNavigationSideEffect.NavigateToContacts -> onNavigateToContacts()
-      }
     }
   }
 

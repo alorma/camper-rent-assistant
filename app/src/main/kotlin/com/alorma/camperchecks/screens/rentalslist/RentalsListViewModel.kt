@@ -34,6 +34,8 @@ class RentalsListViewModel(
     when (navigation) {
       is RentalsListNavigation.OpenRentalDetail ->
         emitNavigationSideEffect(RentalsListNavigationSideEffect.NavigateToRentalDetail(navigation.rentalId))
+      RentalsListNavigation.OpenChecklistTemplates ->
+        emitNavigationSideEffect(RentalsListNavigationSideEffect.NavigateToChecklistTemplates)
     }
   }
 
@@ -80,12 +82,16 @@ sealed interface RentalsListNavigation {
   data class OpenRentalDetail(
     val rentalId: String,
   ) : RentalsListNavigation
+
+  data object OpenChecklistTemplates : RentalsListNavigation
 }
 
 sealed interface RentalsListNavigationSideEffect {
   data class NavigateToRentalDetail(
     val rentalId: String,
   ) : RentalsListNavigationSideEffect
+
+  data object NavigateToChecklistTemplates : RentalsListNavigationSideEffect
 }
 
 sealed interface RentalsListSideEffect

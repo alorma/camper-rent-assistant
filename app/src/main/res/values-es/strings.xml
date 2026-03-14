@@ -51,6 +51,26 @@
     <string name="rentals_list_empty_title">Sin alquileres aún</string>
     <string name="rentals_list_empty_subtitle">Añade tu primer alquiler para empezar</string>
 
+    <!-- Checklist phases -->
+    <string name="checklist_phase_pre_work">Previa</string>
+    <string name="checklist_phase_renting_day">Día de alquiler</string>
+    <string name="checklist_phase_during_renting">Durante el alquiler</string>
+    <string name="checklist_phase_end_day">Día de devolución</string>
+    <string name="checklist_phase_after_rent">Postventa</string>
+
+    <!-- Rentals list screen — checklist templates entry -->
+    <string name="rentals_list_checklist_templates">Plantillas</string>
+
+    <!-- Checklist templates screen -->
+    <string name="checklist_templates_title">Plantillas de checklist</string>
+    <string name="checklist_templates_add_item">Añadir elemento</string>
+    <string name="checklist_templates_delete_item">Eliminar elemento</string>
+    <string name="checklist_templates_empty_title">Sin elementos aún</string>
+    <string name="checklist_templates_empty_subtitle">Toca "Añadir elemento" para crear un elemento de plantilla</string>
+    <string name="checklist_templates_dialog_add_title">Añadir elemento</string>
+    <string name="checklist_templates_dialog_edit_title">Editar elemento</string>
+    <string name="checklist_templates_dialog_item_label">Título del elemento</string>
+
     <!-- Rental detail screen -->
     <string name="rental_detail_title_fallback">Detalle del alquiler</string>
     <string name="rental_detail_section_actions">Acciones</string>
