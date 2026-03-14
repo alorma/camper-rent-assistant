@@ -17,13 +17,13 @@ class ChecklistsViewModel(
   private val rentalId: String,
   private val checklistDataSource: ChecklistDataSource,
 ) : BaseViewModel<ChecklistsNavigation, ChecklistsNavigationSideEffect, ChecklistsSideEffect>() {
-
   private val selectedPhase = MutableStateFlow(ChecklistPhase.PRE_WORK)
   private val dialogState = MutableStateFlow<ChecklistDialogState>(ChecklistDialogState.Hidden)
 
   val uiState: StateFlow<ChecklistsUiState> =
     combine(
-      checklistDataSource.getItemsByRental(rentalId)
+      checklistDataSource
+        .getItemsByRental(rentalId)
         .map { items -> items.groupBy { it.phase } },
       selectedPhase,
       dialogState,
@@ -95,8 +95,12 @@ data class ChecklistsUiState(
 
 sealed interface ChecklistDialogState {
   data object Hidden : ChecklistDialogState
+
   data object Adding : ChecklistDialogState
-  data class Editing(val item: ChecklistItem) : ChecklistDialogState
+
+  data class Editing(
+    val item: ChecklistItem,
+  ) : ChecklistDialogState
 }
 
 sealed interface ChecklistsNavigation {

@@ -8,71 +8,66 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
-class FirebaseChecklistDataSource(
+class FirebaseChecklistTemplateDataSource(
   private val firestoreProvider: UserFirestoreProvider,
-) : ChecklistDataSource {
-  override fun getItemsByRental(rentalId: String): Flow<List<ChecklistItem>> =
+) : ChecklistTemplateDataSource {
+  override fun getTemplates(): Flow<List<ChecklistTemplate>> =
     callbackFlow {
       val listener =
         firestoreProvider
-          .collection("checklists")
-          .whereEqualTo("rentalId", rentalId)
+          .collection("checklistTemplates")
           .addSnapshotListener { snapshot, error ->
             if (error != null) {
-              Timber.e(error, "Error listening to checklists for rental $rentalId")
+              Timber.e(error, "Error listening to checklist templates")
               trySend(emptyList())
               return@addSnapshotListener
             }
-            trySend(snapshot?.documents?.mapNotNull { it.toChecklistItem() } ?: emptyList())
+            trySend(snapshot?.documents?.mapNotNull { it.toChecklistTemplate() } ?: emptyList())
           }
       awaitClose { listener.remove() }
     }
 
-  override suspend fun addItem(
-    rentalId: String,
+  override suspend fun addTemplate(
     phase: ChecklistPhase,
     title: String,
   ) {
-    val doc = firestoreProvider.collection("checklists").document()
+    val doc = firestoreProvider.collection("checklistTemplates").document()
     doc
       .set(
         mapOf(
           "id" to doc.id,
-          "rentalId" to rentalId,
           "phase" to phase.name,
           "title" to title,
         ),
       ).await()
   }
 
-  override suspend fun updateItem(
-    itemId: String,
+  override suspend fun updateTemplate(
+    templateId: String,
     title: String,
   ) {
     firestoreProvider
-      .collection("checklists")
-      .document(itemId)
+      .collection("checklistTemplates")
+      .document(templateId)
       .update("title", title)
       .await()
   }
 
-  override suspend fun deleteItem(itemId: String) {
+  override suspend fun deleteTemplate(templateId: String) {
     firestoreProvider
-      .collection("checklists")
-      .document(itemId)
+      .collection("checklistTemplates")
+      .document(templateId)
       .delete()
       .await()
   }
 
-  private fun DocumentSnapshot.toChecklistItem(): ChecklistItem? {
+  private fun DocumentSnapshot.toChecklistTemplate(): ChecklistTemplate? {
     val id = getString("id") ?: return null
-    val rentalId = getString("rentalId") ?: return null
     val phaseStr = getString("phase") ?: return null
     val title = getString("title") ?: return null
     val phase = runCatching { ChecklistPhase.valueOf(phaseStr) }.getOrNull() ?: return null
-    return ChecklistItem(
+    return ChecklistTemplate(
       id = id,
-      rentalId = rentalId,
       phase = phase,
       title = title,
     )

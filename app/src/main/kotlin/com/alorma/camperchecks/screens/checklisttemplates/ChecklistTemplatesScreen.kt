@@ -1,4 +1,4 @@
-package com.alorma.camperchecks.screens.checklists
+package com.alorma.camperchecks.screens.checklisttemplates
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,10 +27,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.alorma.camperchecks.checklist.ChecklistItem
+import com.alorma.camperchecks.R
 import com.alorma.camperchecks.checklist.ChecklistPhase
+import com.alorma.camperchecks.checklist.ChecklistTemplate
 import com.alorma.camperchecks.icons.AppIcons
 import com.alorma.camperchecks.icons.filled.Delete
 import com.alorma.camperchecks.ui.components.scaffold.AppScaffold
@@ -38,20 +40,18 @@ import com.alorma.camperchecks.ui.components.topbar.NavigationIcon
 import com.alorma.camperchecks.ui.components.topbar.StyledTopAppBar
 import com.alorma.camperchecks.ui.theme.AppTheme
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
-fun ChecklistsScreen(
-  rentalId: String,
+fun ChecklistTemplatesScreen(
   onNavigateBack: () -> Unit,
-  viewModel: ChecklistsViewModel = koinViewModel(parameters = { parametersOf(rentalId) }),
+  viewModel: ChecklistTemplatesViewModel = koinViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   LaunchedEffect(Unit) {
     viewModel.navigationSideEffects.collect { effect ->
       when (effect) {
-        ChecklistsNavigationSideEffect.NavigateBack -> onNavigateBack()
+        ChecklistTemplatesNavigationSideEffect.NavigateBack -> onNavigateBack()
       }
     }
   }
@@ -59,14 +59,14 @@ fun ChecklistsScreen(
   AppScaffold(
     topBar = {
       StyledTopAppBar(
-        title = { Text(text = "Checklists") },
+        title = { Text(text = stringResource(R.string.checklist_templates_title)) },
         navigationIcon = { NavigationIcon() },
       )
     },
     floatingActionButton = {
       ExtendedFloatingActionButton(
         onClick = viewModel::onAddItemClick,
-        text = { Text("Add item") },
+        text = { Text(stringResource(R.string.checklist_templates_add_item)) },
         icon = {},
       )
     },
@@ -84,8 +84,8 @@ fun ChecklistsScreen(
 
       HorizontalDivider()
 
-      ChecklistItemsList(
-        items = uiState.currentPhaseItems,
+      TemplateItemsList(
+        items = uiState.currentPhaseTemplates,
         onEditItem = viewModel::onEditItemClick,
         onDeleteItem = viewModel::onDeleteItem,
         contentPadding =
@@ -99,19 +99,19 @@ fun ChecklistsScreen(
   }
 
   when (val dialog = uiState.dialogState) {
-    ChecklistDialogState.Hidden -> Unit
-    ChecklistDialogState.Adding -> {
-      AddEditItemDialog(
-        title = "Add item",
+    ChecklistTemplateDialogState.Hidden -> Unit
+    ChecklistTemplateDialogState.Adding -> {
+      AddEditTemplateDialog(
+        title = stringResource(R.string.checklist_templates_dialog_add_title),
         initialValue = "",
         onDismiss = viewModel::onDismissDialog,
         onConfirm = viewModel::onSaveItem,
       )
     }
-    is ChecklistDialogState.Editing -> {
-      AddEditItemDialog(
-        title = "Edit item",
-        initialValue = dialog.item.title,
+    is ChecklistTemplateDialogState.Editing -> {
+      AddEditTemplateDialog(
+        title = stringResource(R.string.checklist_templates_dialog_edit_title),
+        initialValue = dialog.template.title,
         onDismiss = viewModel::onDismissDialog,
         onConfirm = viewModel::onSaveItem,
       )
@@ -142,10 +142,10 @@ private fun PhaseTabRow(
 }
 
 @Composable
-private fun ChecklistItemsList(
-  items: List<ChecklistItem>,
-  onEditItem: (ChecklistItem) -> Unit,
-  onDeleteItem: (ChecklistItem) -> Unit,
+private fun TemplateItemsList(
+  items: List<ChecklistTemplate>,
+  onEditItem: (ChecklistTemplate) -> Unit,
+  onDeleteItem: (ChecklistTemplate) -> Unit,
   contentPadding: PaddingValues,
 ) {
   if (items.isEmpty()) {
@@ -156,7 +156,7 @@ private fun ChecklistItemsList(
       contentPadding = contentPadding,
     ) {
       items(items, key = { it.id }) { item ->
-        ChecklistItemRow(
+        TemplateItemRow(
           item = item,
           onEdit = { onEditItem(item) },
           onDelete = { onDeleteItem(item) },
@@ -177,12 +177,12 @@ private fun EmptyPhaseContent(contentPadding: PaddingValues) {
     verticalArrangement = Arrangement.Center,
   ) {
     Text(
-      text = "No items yet",
+      text = stringResource(R.string.checklist_templates_empty_title),
       style = AppTheme.typography.headlineSmall,
       color = AppTheme.colorScheme.onSurfaceVariant,
     )
     Text(
-      text = "Tap \"Add item\" to create a checklist item",
+      text = stringResource(R.string.checklist_templates_empty_subtitle),
       style = AppTheme.typography.bodyMedium,
       color = AppTheme.colorScheme.outline,
     )
@@ -190,8 +190,8 @@ private fun EmptyPhaseContent(contentPadding: PaddingValues) {
 }
 
 @Composable
-private fun ChecklistItemRow(
-  item: ChecklistItem,
+private fun TemplateItemRow(
+  item: ChecklistTemplate,
   onEdit: () -> Unit,
   onDelete: () -> Unit,
 ) {
@@ -202,7 +202,7 @@ private fun ChecklistItemRow(
       IconButton(onClick = onDelete) {
         Icon(
           imageVector = AppIcons.Filled.Delete,
-          contentDescription = "Delete item",
+          contentDescription = stringResource(R.string.checklist_templates_delete_item),
         )
       }
     },
@@ -210,7 +210,7 @@ private fun ChecklistItemRow(
 }
 
 @Composable
-private fun AddEditItemDialog(
+private fun AddEditTemplateDialog(
   title: String,
   initialValue: String,
   onDismiss: () -> Unit,
@@ -225,7 +225,7 @@ private fun AddEditItemDialog(
       OutlinedTextField(
         value = text,
         onValueChange = { text = it },
-        label = { Text("Item title") },
+        label = { Text(stringResource(R.string.checklist_templates_dialog_item_label)) },
         singleLine = true,
         modifier = Modifier.fillMaxWidth(),
       )
@@ -235,12 +235,12 @@ private fun AddEditItemDialog(
         onClick = { onConfirm(text) },
         enabled = text.isNotBlank(),
       ) {
-        Text("Save")
+        Text(stringResource(R.string.ok))
       }
     },
     dismissButton = {
       TextButton(onClick = onDismiss) {
-        Text("Cancel")
+        Text(stringResource(R.string.cancel))
       }
     },
   )

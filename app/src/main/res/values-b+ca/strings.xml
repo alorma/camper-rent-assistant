@@ -51,6 +51,19 @@
     <string name="rentals_list_empty_title">Encara no hi ha lloguers</string>
     <string name="rentals_list_empty_subtitle">Afegeix el primer lloguer per començar</string>
 
+    <!-- Rentals list screen — checklist templates entry -->
+    <string name="rentals_list_checklist_templates">Plantilles</string>
+
+    <!-- Checklist templates screen -->
+    <string name="checklist_templates_title">Plantilles de llista de verificació</string>
+    <string name="checklist_templates_add_item">Afegeix un element</string>
+    <string name="checklist_templates_delete_item">Elimina l\'element</string>
+    <string name="checklist_templates_empty_title">Encara no hi ha elements</string>
+    <string name="checklist_templates_empty_subtitle">Toca "Afegeix un element" per crear un element de plantilla</string>
+    <string name="checklist_templates_dialog_add_title">Afegeix un element</string>
+    <string name="checklist_templates_dialog_edit_title">Edita l\'element</string>
+    <string name="checklist_templates_dialog_item_label">Títol de l\'element</string>
+
     <!-- Rental detail screen -->
     <string name="rental_detail_title_fallback">Detall del lloguer</string>
     <string name="rental_detail_section_actions">Accions</string>

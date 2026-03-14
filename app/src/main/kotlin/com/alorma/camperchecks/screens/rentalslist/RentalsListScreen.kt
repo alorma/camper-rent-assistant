@@ -36,6 +36,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun RentalsListScreen(
   onAddRental: () -> Unit,
   onOpenRentalDetail: (rentalId: String) -> Unit,
+  onOpenChecklistTemplates: () -> Unit,
   viewModel: RentalsListViewModel = koinViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -45,6 +46,8 @@ fun RentalsListScreen(
       when (effect) {
         is RentalsListNavigationSideEffect.NavigateToRentalDetail ->
           onOpenRentalDetail(effect.rentalId)
+        RentalsListNavigationSideEffect.NavigateToChecklistTemplates ->
+          onOpenChecklistTemplates()
       }
     }
   }
@@ -54,6 +57,9 @@ fun RentalsListScreen(
       StyledTopAppBar(
         title = { Text(text = stringResource(R.string.rentals_list_title)) },
         actions = {
+          TextButton(onClick = { viewModel.navigate(RentalsListNavigation.OpenChecklistTemplates) }) {
+            Text(text = stringResource(R.string.rentals_list_checklist_templates))
+          }
           TextButton(onClick = viewModel::onSignOut) {
             Text(text = stringResource(R.string.rentals_list_sign_out))
           }

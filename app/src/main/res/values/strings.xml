@@ -51,6 +51,19 @@
     <string name="rentals_list_empty_title">No rentals yet</string>
     <string name="rentals_list_empty_subtitle">Add your first rental to get started</string>
 
+    <!-- Rentals list screen — checklist templates entry -->
+    <string name="rentals_list_checklist_templates">Templates</string>
+
+    <!-- Checklist templates screen -->
+    <string name="checklist_templates_title">Checklist templates</string>
+    <string name="checklist_templates_add_item">Add item</string>
+    <string name="checklist_templates_delete_item">Delete item</string>
+    <string name="checklist_templates_empty_title">No items yet</string>
+    <string name="checklist_templates_empty_subtitle">Tap "Add item" to create a template item</string>
+    <string name="checklist_templates_dialog_add_title">Add item</string>
+    <string name="checklist_templates_dialog_edit_title">Edit item</string>
+    <string name="checklist_templates_dialog_item_label">Item title</string>
+
     <!-- Rental detail screen -->
     <string name="rental_detail_title_fallback">Rental detail</string>
     <string name="rental_detail_section_actions">Actions</string>
