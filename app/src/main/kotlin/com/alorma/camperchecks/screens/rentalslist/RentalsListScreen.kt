@@ -22,8 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alorma.camperchecks.R
 import com.alorma.camperchecks.rental.Rental
 import com.alorma.camperchecks.ui.components.scaffold.AppScaffold
 import com.alorma.camperchecks.ui.components.topbar.StyledTopAppBar
@@ -50,10 +52,10 @@ fun RentalsListScreen(
   AppScaffold(
     topBar = {
       StyledTopAppBar(
-        title = { Text(text = "Rentals") },
+        title = { Text(text = stringResource(R.string.rentals_list_title)) },
         actions = {
           TextButton(onClick = viewModel::onSignOut) {
-            Text(text = "Sign out")
+            Text(text = stringResource(R.string.rentals_list_sign_out))
           }
         },
       )
@@ -61,7 +63,7 @@ fun RentalsListScreen(
     floatingActionButton = {
       ExtendedFloatingActionButton(
         onClick = onAddRental,
-        text = { Text("Add rental") },
+        text = { Text(stringResource(R.string.rentals_list_add_rental)) },
         icon = {},
       )
     },
@@ -78,7 +80,7 @@ fun RentalsListScreen(
     ) {
       uiState.currentRental?.let { rental ->
         item(key = "current_header") {
-          SectionHeader(title = "Current rental")
+          SectionHeader(title = stringResource(R.string.rentals_list_section_current))
         }
         item(key = "current_${rental.id}") {
           CurrentRentalCard(
@@ -90,7 +92,7 @@ fun RentalsListScreen(
 
       if (uiState.upcomingRentals.isNotEmpty()) {
         item(key = "upcoming_header") {
-          SectionHeader(title = "Upcoming")
+          SectionHeader(title = stringResource(R.string.rentals_list_section_upcoming))
         }
         items(uiState.upcomingRentals, key = { it.id }) { rental ->
           RentalListItem(
@@ -102,7 +104,7 @@ fun RentalsListScreen(
 
       if (uiState.pastRentals.isNotEmpty()) {
         item(key = "past_header") {
-          SectionHeader(title = "Past")
+          SectionHeader(title = stringResource(R.string.rentals_list_section_past))
         }
         items(uiState.pastRentals, key = { it.id }) { rental ->
           RentalListItem(
@@ -201,13 +203,13 @@ private fun EmptyRentals() {
     verticalArrangement = Arrangement.Center,
   ) {
     Text(
-      text = "No rentals yet",
+      text = stringResource(R.string.rentals_list_empty_title),
       style = AppTheme.typography.headlineSmall,
       color = AppTheme.colorScheme.onSurfaceVariant,
     )
     Spacer(modifier = Modifier.height(8.dp))
     Text(
-      text = "Add your first rental to get started",
+      text = stringResource(R.string.rentals_list_empty_subtitle),
       style = AppTheme.typography.bodyMedium,
       color = AppTheme.colorScheme.outline,
     )
