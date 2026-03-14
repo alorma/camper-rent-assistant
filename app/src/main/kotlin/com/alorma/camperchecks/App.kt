@@ -14,6 +14,8 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.alorma.camperchecks.screens.addrental.AddRentalRoute
 import com.alorma.camperchecks.screens.addrental.AddRentalScreen
+import com.alorma.camperchecks.screens.checklists.ChecklistsRoute
+import com.alorma.camperchecks.screens.checklists.ChecklistsScreen
 import com.alorma.camperchecks.screens.login.LoginRoute
 import com.alorma.camperchecks.screens.login.LoginScreen
 import com.alorma.camperchecks.screens.onboarding.OnboardingRoute
@@ -87,10 +89,16 @@ private fun AppNavGraph(startKey: NavKey) {
           RentalDetailScreen(
             rentalId = route.rentalId,
             onNavigateBack = { appBackStack.removeLast() },
-            onNavigateToChecklists = {},
+            onNavigateToChecklists = { appBackStack.add(ChecklistsRoute(route.rentalId)) },
             onNavigateToCondition = {},
             onNavigateToTaxes = {},
             onNavigateToContacts = {},
+          )
+        }
+        entry<ChecklistsRoute> { route ->
+          ChecklistsScreen(
+            rentalId = route.rentalId,
+            onNavigateBack = { appBackStack.removeLast() },
           )
         }
       },
