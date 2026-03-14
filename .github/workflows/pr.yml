@@ -103,6 +103,15 @@ jobs:
         run: npm install
         working-directory: firebase/functions
 
+      - name: Build TypeScript
+        run: npm run build
+        working-directory: firebase/functions
+
       - name: Run tests
         run: npm test
         working-directory: firebase/functions
+
+      - name: Validate Firestore rules
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}" > /tmp/sa.json
+          GOOGLE_APPLICATION_CREDENTIALS=/tmp/sa.json npx firebase-tools firestore:rules --check --project camperchecks-490115 --config firebase/firebase.json
