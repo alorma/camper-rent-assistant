@@ -2,7 +2,8 @@
   "name": "functions",
   "scripts": {
     "build": "tsc",
-    "build:watch": "tsc --watch"
+    "build:watch": "tsc --watch",
+    "test": "jest"
   },
   "engines": {
     "node": "20"
@@ -13,7 +14,18 @@
     "firebase-functions": "^6.0.0"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.0.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": ["ts-jest", { "tsconfig": "tsconfig.test.json" }]
+    },
+    "testMatch": ["**/*.test.ts"]
   },
   "private": true
 }
