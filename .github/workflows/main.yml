@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -121,13 +120,13 @@ jobs:
               - 'firebase/**'
 
       - name: Set up Node.js
-        if: steps.changes.outputs.firebase == 'true' || github.event_name == 'workflow_dispatch'
+        if: steps.changes.outputs.firebase == 'true'
         uses: actions/setup-node@v5
         with:
           node-version: '20'
 
       - name: Deploy Firestore rules and Functions
-        if: steps.changes.outputs.firebase == 'true' || github.event_name == 'workflow_dispatch'
+        if: steps.changes.outputs.firebase == 'true'
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only firestore:rules,firestore:indexes,functions --project camperchecks-490115
