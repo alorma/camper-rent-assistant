@@ -86,3 +86,23 @@ jobs:
           name: camperchecks-pr-debug-apk
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 5
+
+  test-functions:
+    name: Test Cloud Functions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: firebase/functions
+
+      - name: Run tests
+        run: npm test
+        working-directory: firebase/functions
