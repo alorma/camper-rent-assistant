@@ -62,7 +62,7 @@ export async function copyTemplateChecklist(
 }
 
 export const copyTemplateChecklistOnRentalCreated = onDocumentCreated(
-  'users/{uid}/rentals/{rentalId}',
+  { document: 'users/{uid}/rentals/{rentalId}', region: 'europe-west1' },
   async (event) => {
     const { uid, rentalId } = event.params;
     return copyTemplateChecklist(uid, rentalId, admin.firestore());
