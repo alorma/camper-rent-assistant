@@ -57,7 +57,9 @@ fun RentalsListScreen(
       StyledTopAppBar(
         title = { Text(text = stringResource(R.string.rentals_list_title)) },
         actions = {
-          TextButton(onClick = { viewModel.navigate(RentalsListNavigation.OpenChecklistTemplates) }) {
+          TextButton(
+            onClick = { viewModel.navigate(RentalsListNavigation.OpenChecklistTemplates) },
+          ) {
             Text(text = stringResource(R.string.rentals_list_checklist_templates))
           }
           TextButton(onClick = viewModel::onSignOut) {

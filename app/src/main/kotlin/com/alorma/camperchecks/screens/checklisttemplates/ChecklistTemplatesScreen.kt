@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
@@ -82,8 +83,6 @@ fun ChecklistTemplatesScreen(
         onPhaseSelected = viewModel::onPhaseSelected,
       )
 
-      HorizontalDivider()
-
       TemplateItemsList(
         items = uiState.currentPhaseTemplates,
         onEditItem = viewModel::onEditItemClick,
@@ -127,9 +126,10 @@ private fun PhaseTabRow(
   val phases = ChecklistPhase.entries
   val selectedIndex = phases.indexOf(selectedPhase)
 
-  ScrollableTabRow(
+  PrimaryScrollableTabRow(
     selectedTabIndex = selectedIndex,
     edgePadding = 0.dp,
+    divider = {},
   ) {
     phases.forEach { phase ->
       Tab(

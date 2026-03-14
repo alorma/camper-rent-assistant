@@ -91,11 +91,6 @@ private fun AppNavGraph(startKey: NavKey) {
         entry<RentalDetailRoute> { route ->
           RentalDetailScreen(
             rentalId = route.rentalId,
-            onNavigateBack = { appBackStack.removeLast() },
-            onNavigateToChecklists = { appBackStack.add(ChecklistsRoute(route.rentalId)) },
-            onNavigateToCondition = {},
-            onNavigateToTaxes = {},
-            onNavigateToContacts = {},
           )
         }
         entry<ChecklistsRoute> { route ->

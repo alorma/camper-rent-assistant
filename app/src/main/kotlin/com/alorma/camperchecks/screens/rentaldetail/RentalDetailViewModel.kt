@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 class RentalDetailViewModel(
-  private val rentalId: String,
-  private val rentalDataSource: RentalDataSource,
+  rentalId: String,
+  rentalDataSource: RentalDataSource,
 ) : BaseViewModel<RentalDetailNavigation, RentalDetailNavigationSideEffect, RentalDetailSideEffect>() {
   val uiState: StateFlow<RentalDetailUiState> =
     rentalDataSource
@@ -25,14 +25,10 @@ class RentalDetailViewModel(
 
   override fun navigate(navigation: RentalDetailNavigation) {
     when (navigation) {
-      RentalDetailNavigation.Checklists ->
-        emitNavigationSideEffect(RentalDetailNavigationSideEffect.NavigateToChecklists)
-      RentalDetailNavigation.Condition ->
-        emitNavigationSideEffect(RentalDetailNavigationSideEffect.NavigateToCondition)
-      RentalDetailNavigation.Taxes ->
-        emitNavigationSideEffect(RentalDetailNavigationSideEffect.NavigateToTaxes)
-      RentalDetailNavigation.Contacts ->
-        emitNavigationSideEffect(RentalDetailNavigationSideEffect.NavigateToContacts)
+      RentalDetailNavigation.Checklists -> {}
+      RentalDetailNavigation.Condition -> {}
+      RentalDetailNavigation.Taxes -> {}
+      RentalDetailNavigation.Contacts -> {}
     }
   }
 }
@@ -51,14 +47,6 @@ sealed interface RentalDetailNavigation {
   data object Contacts : RentalDetailNavigation
 }
 
-sealed interface RentalDetailNavigationSideEffect {
-  data object NavigateToChecklists : RentalDetailNavigationSideEffect
-
-  data object NavigateToCondition : RentalDetailNavigationSideEffect
-
-  data object NavigateToTaxes : RentalDetailNavigationSideEffect
-
-  data object NavigateToContacts : RentalDetailNavigationSideEffect
-}
+sealed interface RentalDetailNavigationSideEffect
 
 sealed interface RentalDetailSideEffect
