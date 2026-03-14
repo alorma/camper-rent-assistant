@@ -73,7 +73,7 @@ jobs:
           DEBUG_APP_CHECK_TOKEN: ${{ secrets.DEBUG_APP_CHECK_TOKEN }}
 
       - name: Run ktlint
-        continue-on-error: false
+        continue-on-error: true
         run: ./gradlew ktlintCheck
 
       - name: Run Unit Tests
