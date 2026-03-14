@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
-import com.joyner.googlesignincomposelibrary.models.types.Outlined
-import com.joyner.googlesignincomposelibrary.ui.GoogleSignInButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +21,8 @@ import com.alorma.camperchecks.R
 import com.alorma.camperchecks.ui.components.scaffold.AppScaffold
 import com.alorma.camperchecks.ui.components.topbar.StyledTopAppBar
 import com.alorma.camperchecks.ui.theme.AppTheme
+import com.joyner.googlesignincomposelibrary.models.types.Outlined
+import com.joyner.googlesignincomposelibrary.ui.GoogleSignInButton
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

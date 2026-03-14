@@ -6,7 +6,6 @@ import com.alorma.camperchecks.clock.AppClock
 import com.alorma.camperchecks.rental.Rental
 import com.alorma.camperchecks.rental.RentalDataSource
 import com.alorma.camperchecks.ui.base.BaseViewModel
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -14,15 +13,16 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.ExperimentalTime
 
 class RentalsListViewModel(
   private val session: Session,
   private val rentalDataSource: RentalDataSource,
   private val clock: AppClock,
 ) : BaseViewModel<RentalsListNavigation, RentalsListNavigationSideEffect, RentalsListSideEffect>() {
-
   val uiState: StateFlow<RentalsListUiState> =
-    rentalDataSource.getRentals()
+    rentalDataSource
+      .getRentals()
       .map { rentals -> buildUiState(rentals) }
       .stateIn(
         scope = viewModelScope,
@@ -45,21 +45,22 @@ class RentalsListViewModel(
   private fun buildUiState(rentals: List<Rental>): RentalsListUiState {
     val now: LocalDateTime = clock.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
-    val current = rentals.firstOrNull { rental ->
-      !rental.finished && rental.startAt <= now && rental.endAt >= now
-    }
-
-    val upcoming = rentals
-      .filter { rental ->
-        !rental.finished && rental.endAt >= now && rental.id != current?.id
+    val current =
+      rentals.firstOrNull { rental ->
+        !rental.finished && rental.startAt <= now && rental.endAt >= now
       }
-      .sortedBy { it.startAt }
 
-    val past = rentals
-      .filter { rental ->
-        rental.finished || rental.endAt < now
-      }
-      .sortedByDescending { it.endAt }
+    val upcoming =
+      rentals
+        .filter { rental ->
+          !rental.finished && rental.endAt >= now && rental.id != current?.id
+        }.sortedBy { it.startAt }
+
+    val past =
+      rentals
+        .filter { rental ->
+          rental.finished || rental.endAt < now
+        }.sortedByDescending { it.endAt }
 
     return RentalsListUiState(
       currentRental = current,
@@ -76,11 +77,15 @@ data class RentalsListUiState(
 )
 
 sealed interface RentalsListNavigation {
-  data class OpenRentalDetail(val rentalId: String) : RentalsListNavigation
+  data class OpenRentalDetail(
+    val rentalId: String,
+  ) : RentalsListNavigation
 }
 
 sealed interface RentalsListNavigationSideEffect {
-  data class NavigateToRentalDetail(val rentalId: String) : RentalsListNavigationSideEffect
+  data class NavigateToRentalDetail(
+    val rentalId: String,
+  ) : RentalsListNavigationSideEffect
 }
 
 sealed interface RentalsListSideEffect

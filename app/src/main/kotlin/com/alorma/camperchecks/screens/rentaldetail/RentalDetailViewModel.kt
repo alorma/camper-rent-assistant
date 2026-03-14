@@ -13,9 +13,9 @@ class RentalDetailViewModel(
   private val rentalId: String,
   private val rentalDataSource: RentalDataSource,
 ) : BaseViewModel<RentalDetailNavigation, RentalDetailNavigationSideEffect, RentalDetailSideEffect>() {
-
   val uiState: StateFlow<RentalDetailUiState> =
-    rentalDataSource.getRentalById(rentalId)
+    rentalDataSource
+      .getRentalById(rentalId)
       .map { result -> RentalDetailUiState(rental = result.getOrNull()) }
       .stateIn(
         scope = viewModelScope,
@@ -43,15 +43,21 @@ data class RentalDetailUiState(
 
 sealed interface RentalDetailNavigation {
   data object Checklists : RentalDetailNavigation
+
   data object Condition : RentalDetailNavigation
+
   data object Taxes : RentalDetailNavigation
+
   data object Contacts : RentalDetailNavigation
 }
 
 sealed interface RentalDetailNavigationSideEffect {
   data object NavigateToChecklists : RentalDetailNavigationSideEffect
+
   data object NavigateToCondition : RentalDetailNavigationSideEffect
+
   data object NavigateToTaxes : RentalDetailNavigationSideEffect
+
   data object NavigateToContacts : RentalDetailNavigationSideEffect
 }
 

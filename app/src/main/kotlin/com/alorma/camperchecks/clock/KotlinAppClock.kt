@@ -1,9 +1,9 @@
 package com.alorma.camperchecks.clock
 
-import kotlin.time.Clock
-import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 class KotlinAppClock(
   private val clock: Clock = Clock.System,

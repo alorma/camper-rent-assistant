@@ -19,17 +19,17 @@ class AppViewModel(
   session: Session,
   vehicleDataSource: VehicleDataSource,
 ) : BaseViewModel<AppNavigation, AppNavigationSideEffect, AppSideEffect>() {
-
   val startKey: StateFlow<NavKey?> =
     combine(session.state, vehicleDataSource.getVehicleState()) { sessionState, vehicleState ->
       when (sessionState) {
         SessionState.Loading -> null
         SessionState.Unauthenticated -> LoginRoute
-        is SessionState.Authenticated -> when (vehicleState) {
-          VehicleState.Loading -> null
-          VehicleState.NotFound -> OnboardingRoute
-          is VehicleState.Found -> RentalsListRoute
-        }
+        is SessionState.Authenticated ->
+          when (vehicleState) {
+            VehicleState.Loading -> null
+            VehicleState.NotFound -> OnboardingRoute
+            is VehicleState.Found -> RentalsListRoute
+          }
       }
     }.stateIn(
       scope = viewModelScope,

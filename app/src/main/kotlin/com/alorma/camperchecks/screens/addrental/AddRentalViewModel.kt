@@ -20,7 +20,6 @@ class AddRentalViewModel(
   private val rentalDataSource: RentalDataSource,
   private val vehicleDataSource: VehicleDataSource,
 ) : BaseViewModel<AddRentalNavigation, AddRentalNavigationSideEffect, AddRentalSideEffect>() {
-
   private val _uiState = MutableStateFlow(AddRentalUiState())
   val uiState: StateFlow<AddRentalUiState> = _uiState.asStateFlow()
 
@@ -85,8 +84,9 @@ class AddRentalViewModel(
     viewModelScope.launch {
       _uiState.update { it.copy(isSaving = true) }
       runCatching {
-        val vehicle = vehicleDataSource.getVehicle().first()
-          ?: error("No vehicle found")
+        val vehicle =
+          vehicleDataSource.getVehicle().first()
+            ?: error("No vehicle found")
         rentalDataSource.saveRental(
           provider = RentalProvider.Yescapa,
           referenceId = state.referenceId.trim(),

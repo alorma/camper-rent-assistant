@@ -17,7 +17,6 @@ class FirebaseVehicleDataSource(
   private val firestoreProvider: UserFirestoreProvider,
   private val session: Session,
 ) : VehicleDataSource {
-
   override fun getVehicle(): Flow<Vehicle?> =
     session.state.flatMapLatest { state ->
       when (state) {
@@ -48,19 +47,21 @@ class FirebaseVehicleDataSource(
     plate: String,
   ) {
     val doc = firestoreProvider.collection("vehicles").document()
-    doc.set(
-      mapOf(
-        "id" to doc.id,
-        "name" to name,
-        "plate" to plate,
-      ),
-    ).await()
+    doc
+      .set(
+        mapOf(
+          "id" to doc.id,
+          "name" to name,
+          "plate" to plate,
+        ),
+      ).await()
   }
 
   private fun vehicleFlow(): Flow<Vehicle?> =
     callbackFlow {
       val listener =
-        firestoreProvider.collection("vehicles")
+        firestoreProvider
+          .collection("vehicles")
           .limit(1)
           .addSnapshotListener { snapshot, error ->
             if (error != null) {

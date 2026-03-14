@@ -70,12 +70,13 @@ fun RentalsListScreen(
   ) { paddingValues ->
     LazyColumn(
       modifier = Modifier.fillMaxSize(),
-      contentPadding = PaddingValues(
-        top = paddingValues.calculateTopPadding() + 16.dp,
-        bottom = paddingValues.calculateBottomPadding() + 16.dp,
-        start = 16.dp,
-        end = 16.dp,
-      ),
+      contentPadding =
+        PaddingValues(
+          top = paddingValues.calculateTopPadding() + 16.dp,
+          bottom = paddingValues.calculateBottomPadding() + 16.dp,
+          start = 16.dp,
+          end = 16.dp,
+        ),
       verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
       uiState.currentRental?.let { rental ->
@@ -145,12 +146,14 @@ private fun CurrentRentalCard(
   onClick: () -> Unit,
 ) {
   Card(
-    modifier = Modifier
-      .fillMaxWidth()
-      .clickable(onClick = onClick),
-    colors = CardDefaults.cardColors(
-      containerColor = AppTheme.colorScheme.primaryContainer,
-    ),
+    modifier =
+      Modifier
+        .fillMaxWidth()
+        .clickable(onClick = onClick),
+    colors =
+      CardDefaults.cardColors(
+        containerColor = AppTheme.colorScheme.primaryContainer,
+      ),
   ) {
     Column(
       modifier = Modifier.padding(16.dp),
@@ -197,9 +200,10 @@ private fun RentalListItem(
 @Composable
 private fun EmptyRentals() {
   Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(vertical = 48.dp),
+    modifier =
+      Modifier
+        .fillMaxWidth()
+        .padding(vertical = 48.dp),
     verticalArrangement = Arrangement.Center,
   ) {
     Text(

@@ -13,7 +13,6 @@ import timber.log.Timber
 class OnboardingViewModel(
   private val vehicleDataSource: VehicleDataSource,
 ) : BaseViewModel<OnboardingNavigation, OnboardingNavigationSideEffect, OnboardingSideEffect>() {
-
   private val _uiState = MutableStateFlow(OnboardingUiState())
   val uiState: StateFlow<OnboardingUiState> = _uiState.asStateFlow()
 

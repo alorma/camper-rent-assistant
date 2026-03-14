@@ -8,9 +8,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
@@ -33,8 +34,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alorma.camperchecks.R
@@ -43,13 +42,13 @@ import com.alorma.camperchecks.ui.components.scaffold.AppScaffold
 import com.alorma.camperchecks.ui.components.topbar.NavigationIcon
 import com.alorma.camperchecks.ui.components.topbar.StyledTopAppBar
 import com.alorma.camperchecks.ui.theme.AppTheme
-import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @Composable
 fun AddRentalScreen(
@@ -76,12 +75,13 @@ fun AddRentalScreen(
   ) { paddingValues ->
     LazyColumn(
       modifier = Modifier.fillMaxSize(),
-      contentPadding = PaddingValues(
-        top = paddingValues.calculateTopPadding() + 16.dp,
-        bottom = paddingValues.calculateBottomPadding() + 16.dp,
-        start = 16.dp,
-        end = 16.dp,
-      ),
+      contentPadding =
+        PaddingValues(
+          top = paddingValues.calculateTopPadding() + 16.dp,
+          bottom = paddingValues.calculateBottomPadding() + 16.dp,
+          start = 16.dp,
+          end = 16.dp,
+        ),
       verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
       item {
@@ -218,12 +218,13 @@ fun AddRentalScreen(
 @Composable
 private fun MandatoryFieldsLegend() {
   val requiredField = stringResource(R.string.required_field)
-  val text = buildAnnotatedString {
-    pushStyle(SpanStyle(color = AppTheme.colorScheme.error))
-    append("*")
-    pop()
-    append(" $requiredField")
-  }
+  val text =
+    buildAnnotatedString {
+      pushStyle(SpanStyle(color = AppTheme.colorScheme.error))
+      append("*")
+      pop()
+      append(" $requiredField")
+    }
   Text(
     text = text,
     style = AppTheme.typography.bodySmall,
@@ -233,13 +234,14 @@ private fun MandatoryFieldsLegend() {
 
 @Composable
 private fun RequiredLabel(label: String) {
-  val text = buildAnnotatedString {
-    append(label)
-    append(" ")
-    pushStyle(SpanStyle(color = AppTheme.colorScheme.error))
-    append("*")
-    pop()
-  }
+  val text =
+    buildAnnotatedString {
+      append(label)
+      append(" ")
+      pushStyle(SpanStyle(color = AppTheme.colorScheme.error))
+      append("*")
+      pop()
+    }
   Text(text = text)
 }
 
@@ -286,9 +288,11 @@ private fun DateTimeField(
           onClick = {
             @OptIn(ExperimentalTime::class)
             datePickerState.selectedDateMillis?.let { millis ->
-              val date = Instant.fromEpochMilliseconds(millis)
-                .toLocalDateTime(TimeZone.UTC)
-                .date
+              val date =
+                Instant
+                  .fromEpochMilliseconds(millis)
+                  .toLocalDateTime(TimeZone.UTC)
+                  .date
               onDateSelected(date)
             }
             showDatePicker = false

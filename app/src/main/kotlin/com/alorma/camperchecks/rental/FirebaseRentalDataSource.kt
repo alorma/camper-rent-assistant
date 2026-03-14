@@ -12,11 +12,11 @@ import timber.log.Timber
 class FirebaseRentalDataSource(
   private val firestoreProvider: UserFirestoreProvider,
 ) : RentalDataSource {
-
   override fun getRentals(): Flow<List<Rental>> =
     callbackFlow {
       val listener =
-        firestoreProvider.collection("rentals")
+        firestoreProvider
+          .collection("rentals")
           .addSnapshotListener { snapshot, error ->
             if (error != null) {
               Timber.e(error, "Error listening to rentals")
@@ -31,7 +31,8 @@ class FirebaseRentalDataSource(
   override fun getRentalById(rentalId: String): Flow<Result<Rental>> =
     callbackFlow {
       val listener =
-        firestoreProvider.collection("rentals")
+        firestoreProvider
+          .collection("rentals")
           .document(rentalId)
           .addSnapshotListener { snapshot, error ->
             if (error != null) {
@@ -61,7 +62,8 @@ class FirebaseRentalDataSource(
     notes: String?,
   ) {
     val existing =
-      firestoreProvider.collection("rentals")
+      firestoreProvider
+        .collection("rentals")
         .whereEqualTo("providerId", provider.id)
         .whereEqualTo("referenceId", referenceId)
         .get()
@@ -72,21 +74,22 @@ class FirebaseRentalDataSource(
     }
 
     val doc = firestoreProvider.collection("rentals").document()
-    doc.set(
-      mapOf(
-        "id" to doc.id,
-        "providerId" to provider.id,
-        "referenceId" to referenceId,
-        "vehicleId" to vehicleId,
-        "startAt" to startAt.toString(),
-        "endAt" to endAt.toString(),
-        "renterName" to renterName,
-        "renterPhone" to renterPhone,
-        "renterNotes" to renterNotes,
-        "notes" to notes,
-        "finished" to false,
-      ),
-    ).await()
+    doc
+      .set(
+        mapOf(
+          "id" to doc.id,
+          "providerId" to provider.id,
+          "referenceId" to referenceId,
+          "vehicleId" to vehicleId,
+          "startAt" to startAt.toString(),
+          "endAt" to endAt.toString(),
+          "renterName" to renterName,
+          "renterPhone" to renterPhone,
+          "renterNotes" to renterNotes,
+          "notes" to notes,
+          "finished" to false,
+        ),
+      ).await()
   }
 
   private fun DocumentSnapshot.toRental(): Rental? {
