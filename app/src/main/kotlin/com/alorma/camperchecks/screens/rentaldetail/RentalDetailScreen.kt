@@ -20,8 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alorma.camperchecks.R
 import com.alorma.camperchecks.icons.AppIcons
 import com.alorma.camperchecks.icons.filled.ChevronRight
 import com.alorma.camperchecks.rental.Rental
@@ -60,7 +62,7 @@ fun RentalDetailScreen(
       StyledTopAppBar(
         title = {
           Text(
-            text = uiState.rental?.referenceId ?: "Rental detail",
+            text = uiState.rental?.referenceId ?: stringResource(R.string.rental_detail_title_fallback),
           )
         },
         navigationIcon = { NavigationIcon() },
@@ -84,33 +86,33 @@ fun RentalDetailScreen(
       }
 
       item(key = "actions_header") {
-        SectionHeader(title = "Actions")
+        SectionHeader(title = stringResource(R.string.rental_detail_section_actions))
       }
 
       item(key = "checklists") {
         HubActionItem(
-          label = "Checklists",
+          label = stringResource(R.string.rental_detail_action_checklists),
           onClick = { viewModel.navigate(RentalDetailNavigation.Checklists) },
         )
       }
 
       item(key = "condition") {
         HubActionItem(
-          label = "Condition",
+          label = stringResource(R.string.rental_detail_action_condition),
           onClick = { viewModel.navigate(RentalDetailNavigation.Condition) },
         )
       }
 
       item(key = "taxes") {
         HubActionItem(
-          label = "Taxes",
+          label = stringResource(R.string.rental_detail_action_taxes),
           onClick = { viewModel.navigate(RentalDetailNavigation.Taxes) },
         )
       }
 
       item(key = "contacts") {
         HubActionItem(
-          label = "Contacts",
+          label = stringResource(R.string.rental_detail_action_contacts),
           onClick = { viewModel.navigate(RentalDetailNavigation.Contacts) },
         )
       }

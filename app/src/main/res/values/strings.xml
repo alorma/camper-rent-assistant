@@ -1,3 +1,61 @@
 <resources>
     <string name="app_name">CamperChecks</string>
+
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="tap_to_select">Tap to select</string>
+    <string name="required_field">Required field</string>
+
+    <!-- Login screen -->
+    <string name="login_welcome">Welcome</string>
+    <string name="login_subtitle">Sign in to manage your camper rentals</string>
+    <string name="login_error">Sign-in failed. Please try again.</string>
+
+    <!-- Onboarding screen -->
+    <string name="onboarding_title">Set up your vehicle</string>
+    <string name="onboarding_subtitle">Tell us about your camper to get started</string>
+    <string name="onboarding_field_vehicle_name">Vehicle name</string>
+    <string name="onboarding_field_vehicle_name_placeholder">e.g. My Camper</string>
+    <string name="onboarding_field_license_plate">License plate</string>
+    <string name="onboarding_field_license_plate_placeholder">e.g. ABC-1234</string>
+    <string name="onboarding_button_continue">Let\'s go</string>
+
+    <!-- Add rental screen -->
+    <string name="add_rental_title">New rental</string>
+    <string name="add_rental_field_provider">Provider</string>
+    <string name="add_rental_field_reference_id">Reference ID</string>
+    <string name="add_rental_field_reference_id_placeholder">e.g. 123456</string>
+    <string name="add_rental_field_start_datetime">Start date &amp; time *</string>
+    <string name="add_rental_field_end_datetime">End date &amp; time *</string>
+    <string name="add_rental_field_renter_name">Renter name</string>
+    <string name="add_rental_field_renter_name_placeholder">Full name</string>
+    <string name="add_rental_field_renter_phone">Renter phone</string>
+    <string name="add_rental_field_renter_phone_placeholder">+34 600 000 000</string>
+    <string name="add_rental_field_renter_notes">Renter notes</string>
+    <string name="add_rental_field_renter_notes_placeholder">Any notes about the renter</string>
+    <string name="add_rental_field_notes">Notes</string>
+    <string name="add_rental_field_notes_placeholder">Any additional notes</string>
+    <string name="add_rental_button_save">Save rental</string>
+
+    <!-- Rentals list screen -->
+    <string name="rentals_list_title">Rentals</string>
+    <string name="rentals_list_sign_out">Sign out</string>
+    <string name="rentals_list_add_rental">Add rental</string>
+    <string name="rentals_list_section_current">Current rental</string>
+    <string name="rentals_list_section_upcoming">Upcoming</string>
+    <string name="rentals_list_section_past">Past</string>
+    <string name="rentals_list_empty_title">No rentals yet</string>
+    <string name="rentals_list_empty_subtitle">Add your first rental to get started</string>
+
+    <!-- Rental detail screen -->
+    <string name="rental_detail_title_fallback">Rental detail</string>
+    <string name="rental_detail_section_actions">Actions</string>
+    <string name="rental_detail_action_checklists">Checklists</string>
+    <string name="rental_detail_action_condition">Condition</string>
+    <string name="rental_detail_action_taxes">Taxes</string>
+    <string name="rental_detail_action_contacts">Contacts</string>
 </resources>

@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">CamperChecks</string>
+
+    <!-- Common -->
+    <string name="ok">D\'acord</string>
+    <string name="cancel">Cancel·la</string>
+    <string name="error_generic">Alguna cosa ha anat malament. Si us plau, torna-ho a intentar.</string>
+    <string name="date">Data</string>
+    <string name="time">Hora</string>
+    <string name="tap_to_select">Toca per seleccionar</string>
+    <string name="required_field">Camp obligatori</string>
+
+    <!-- Login screen -->
+    <string name="login_welcome">Benvingut</string>
+    <string name="login_subtitle">Inicia sessió per gestionar els teus lloguers de camper</string>
+    <string name="login_error">Error en iniciar sessió. Si us plau, torna-ho a intentar.</string>
+
+    <!-- Onboarding screen -->
+    <string name="onboarding_title">Configura el teu vehicle</string>
+    <string name="onboarding_subtitle">Parla\'ns del teu camper per començar</string>
+    <string name="onboarding_field_vehicle_name">Nom del vehicle</string>
+    <string name="onboarding_field_vehicle_name_placeholder">p. ex. El meu Camper</string>
+    <string name="onboarding_field_license_plate">Matrícula</string>
+    <string name="onboarding_field_license_plate_placeholder">p. ex. ABC-1234</string>
+    <string name="onboarding_button_continue">Endavant!</string>
+
+    <!-- Add rental screen -->
+    <string name="add_rental_title">Nou lloguer</string>
+    <string name="add_rental_field_provider">Proveïdor</string>
+    <string name="add_rental_field_reference_id">ID de referència</string>
+    <string name="add_rental_field_reference_id_placeholder">p. ex. 123456</string>
+    <string name="add_rental_field_start_datetime">Data i hora d\'inici *</string>
+    <string name="add_rental_field_end_datetime">Data i hora de fi *</string>
+    <string name="add_rental_field_renter_name">Nom del llogatari</string>
+    <string name="add_rental_field_renter_name_placeholder">Nom complet</string>
+    <string name="add_rental_field_renter_phone">Telèfon del llogatari</string>
+    <string name="add_rental_field_renter_phone_placeholder">+34 600 000 000</string>
+    <string name="add_rental_field_renter_notes">Notes del llogatari</string>
+    <string name="add_rental_field_renter_notes_placeholder">Qualsevol nota sobre el llogatari</string>
+    <string name="add_rental_field_notes">Notes</string>
+    <string name="add_rental_field_notes_placeholder">Qualsevol nota addicional</string>
+    <string name="add_rental_button_save">Desa el lloguer</string>
+
+    <!-- Rentals list screen -->
+    <string name="rentals_list_title">Lloguers</string>
+    <string name="rentals_list_sign_out">Tanca la sessió</string>
+    <string name="rentals_list_add_rental">Afegeix un lloguer</string>
+    <string name="rentals_list_section_current">Lloguer actual</string>
+    <string name="rentals_list_section_upcoming">Pròxims</string>
+    <string name="rentals_list_section_past">Passats</string>
+    <string name="rentals_list_empty_title">Encara no hi ha lloguers</string>
+    <string name="rentals_list_empty_subtitle">Afegeix el primer lloguer per començar</string>
+
+    <!-- Rental detail screen -->
+    <string name="rental_detail_title_fallback">Detall del lloguer</string>
+    <string name="rental_detail_section_actions">Accions</string>
+    <string name="rental_detail_action_checklists">Llistes de verificació</string>
+    <string name="rental_detail_action_condition">Estat</string>
+    <string name="rental_detail_action_taxes">Impostos</string>
+    <string name="rental_detail_action_contacts">Contactes</string>
+</resources>

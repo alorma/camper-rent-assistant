@@ -29,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,6 +37,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alorma.camperchecks.R
 import com.alorma.camperchecks.rental.RentalProvider
 import com.alorma.camperchecks.ui.components.scaffold.AppScaffold
 import com.alorma.camperchecks.ui.components.topbar.NavigationIcon
@@ -67,7 +69,7 @@ fun AddRentalScreen(
   AppScaffold(
     topBar = {
       StyledTopAppBar(
-        title = { Text(text = "New rental") },
+        title = { Text(text = stringResource(R.string.add_rental_title)) },
         navigationIcon = { NavigationIcon() },
       )
     },
@@ -91,7 +93,7 @@ fun AddRentalScreen(
           value = RentalProvider.Yescapa.displayName,
           onValueChange = {},
           modifier = Modifier.fillMaxWidth(),
-          label = { Text("Provider") },
+          label = { Text(stringResource(R.string.add_rental_field_provider)) },
           enabled = false,
           singleLine = true,
         )
@@ -102,8 +104,8 @@ fun AddRentalScreen(
           value = uiState.referenceId,
           onValueChange = viewModel::onReferenceIdChange,
           modifier = Modifier.fillMaxWidth(),
-          label = { RequiredLabel("Reference ID") },
-          placeholder = { Text("e.g. 123456") },
+          label = { RequiredLabel(stringResource(R.string.add_rental_field_reference_id)) },
+          placeholder = { Text(stringResource(R.string.add_rental_field_reference_id_placeholder)) },
           singleLine = true,
           enabled = !uiState.isSaving,
         )
@@ -111,7 +113,7 @@ fun AddRentalScreen(
 
       item {
         DateTimeField(
-          label = "Start date & time *",
+          label = stringResource(R.string.add_rental_field_start_datetime),
           value = uiState.startAt?.toString()?.replace("T", "  ") ?: "",
           onDateSelected = viewModel::onStartDateSelected,
           onTimeSelected = viewModel::onStartTimeSelected,
@@ -121,7 +123,7 @@ fun AddRentalScreen(
 
       item {
         DateTimeField(
-          label = "End date & time *",
+          label = stringResource(R.string.add_rental_field_end_datetime),
           value = uiState.endAt?.toString()?.replace("T", "  ") ?: "",
           onDateSelected = viewModel::onEndDateSelected,
           onTimeSelected = viewModel::onEndTimeSelected,
@@ -134,8 +136,8 @@ fun AddRentalScreen(
           value = uiState.renterName,
           onValueChange = viewModel::onRenterNameChange,
           modifier = Modifier.fillMaxWidth(),
-          label = { RequiredLabel("Renter name") },
-          placeholder = { Text("Full name") },
+          label = { RequiredLabel(stringResource(R.string.add_rental_field_renter_name)) },
+          placeholder = { Text(stringResource(R.string.add_rental_field_renter_name_placeholder)) },
           singleLine = true,
           enabled = !uiState.isSaving,
         )
@@ -146,8 +148,8 @@ fun AddRentalScreen(
           value = uiState.renterPhone,
           onValueChange = viewModel::onRenterPhoneChange,
           modifier = Modifier.fillMaxWidth(),
-          label = { Text("Renter phone") },
-          placeholder = { Text("+34 600 000 000") },
+          label = { Text(stringResource(R.string.add_rental_field_renter_phone)) },
+          placeholder = { Text(stringResource(R.string.add_rental_field_renter_phone_placeholder)) },
           singleLine = true,
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
           enabled = !uiState.isSaving,
@@ -159,8 +161,8 @@ fun AddRentalScreen(
           value = uiState.renterNotes,
           onValueChange = viewModel::onRenterNotesChange,
           modifier = Modifier.fillMaxWidth(),
-          label = { Text("Renter notes") },
-          placeholder = { Text("Any notes about the renter") },
+          label = { Text(stringResource(R.string.add_rental_field_renter_notes)) },
+          placeholder = { Text(stringResource(R.string.add_rental_field_renter_notes_placeholder)) },
           minLines = 2,
           maxLines = 4,
           enabled = !uiState.isSaving,
@@ -172,8 +174,8 @@ fun AddRentalScreen(
           value = uiState.notes,
           onValueChange = viewModel::onNotesChange,
           modifier = Modifier.fillMaxWidth(),
-          label = { Text("Notes") },
-          placeholder = { Text("Any additional notes") },
+          label = { Text(stringResource(R.string.add_rental_field_notes)) },
+          placeholder = { Text(stringResource(R.string.add_rental_field_notes_placeholder)) },
           minLines = 2,
           maxLines = 4,
           enabled = !uiState.isSaving,
@@ -183,7 +185,7 @@ fun AddRentalScreen(
       item {
         if (uiState.hasError) {
           Text(
-            text = "Something went wrong. Please try again.",
+            text = stringResource(R.string.error_generic),
             color = AppTheme.colorScheme.error,
             style = AppTheme.typography.bodySmall,
           )
@@ -205,7 +207,7 @@ fun AddRentalScreen(
             modifier = Modifier.fillMaxWidth(),
             enabled = uiState.isValid,
           ) {
-            Text("Save rental")
+            Text(stringResource(R.string.add_rental_button_save))
           }
         }
       }
@@ -215,11 +217,12 @@ fun AddRentalScreen(
 
 @Composable
 private fun MandatoryFieldsLegend() {
+  val requiredField = stringResource(R.string.required_field)
   val text = buildAnnotatedString {
     pushStyle(SpanStyle(color = AppTheme.colorScheme.error))
     append("*")
     pop()
-    append(" Required field")
+    append(" $requiredField")
   }
   Text(
     text = text,
@@ -256,7 +259,7 @@ private fun DateTimeField(
     onValueChange = {},
     modifier = Modifier.fillMaxWidth(),
     label = { Text(label) },
-    placeholder = { Text("Tap to select") },
+    placeholder = { Text(stringResource(R.string.tap_to_select)) },
     readOnly = true,
     enabled = enabled,
     singleLine = true,
@@ -265,11 +268,11 @@ private fun DateTimeField(
         TextButton(
           onClick = { showDatePicker = true },
           enabled = enabled,
-        ) { Text("Date") }
+        ) { Text(stringResource(R.string.date)) }
         TextButton(
           onClick = { showTimePicker = true },
           enabled = enabled,
-        ) { Text("Time") }
+        ) { Text(stringResource(R.string.time)) }
       }
     },
   )
@@ -290,10 +293,10 @@ private fun DateTimeField(
             }
             showDatePicker = false
           },
-        ) { Text("OK") }
+        ) { Text(stringResource(R.string.ok)) }
       },
       dismissButton = {
-        TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
+        TextButton(onClick = { showDatePicker = false }) { Text(stringResource(R.string.cancel)) }
       },
     ) {
       DatePicker(state = datePickerState)
@@ -310,10 +313,10 @@ private fun DateTimeField(
             onTimeSelected(LocalTime(timePickerState.hour, timePickerState.minute))
             showTimePicker = false
           },
-        ) { Text("OK") }
+        ) { Text(stringResource(R.string.ok)) }
       },
       dismissButton = {
-        TextButton(onClick = { showTimePicker = false }) { Text("Cancel") }
+        TextButton(onClick = { showTimePicker = false }) { Text(stringResource(R.string.cancel)) }
       },
       text = {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

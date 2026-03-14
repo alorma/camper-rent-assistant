@@ -18,10 +18,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alorma.camperchecks.R
 import com.alorma.camperchecks.ui.components.scaffold.AppScaffold
 import com.alorma.camperchecks.ui.theme.AppTheme
 import org.koin.compose.viewmodel.koinViewModel
@@ -52,14 +54,14 @@ fun OnboardingScreen(
       verticalArrangement = Arrangement.Center,
     ) {
       Text(
-        text = "Set up your vehicle",
+        text = stringResource(R.string.onboarding_title),
         style = AppTheme.typography.headlineMedium,
       )
 
       Spacer(modifier = Modifier.height(8.dp))
 
       Text(
-        text = "Tell us about your camper to get started",
+        text = stringResource(R.string.onboarding_subtitle),
         style = AppTheme.typography.bodyMedium,
         color = AppTheme.colorScheme.onSurfaceVariant,
       )
@@ -70,8 +72,8 @@ fun OnboardingScreen(
         value = uiState.name,
         onValueChange = viewModel::onNameChange,
         modifier = Modifier.fillMaxWidth(),
-        label = { Text("Vehicle name") },
-        placeholder = { Text("e.g. My Camper") },
+        label = { Text(stringResource(R.string.onboarding_field_vehicle_name)) },
+        placeholder = { Text(stringResource(R.string.onboarding_field_vehicle_name_placeholder)) },
         singleLine = true,
         keyboardOptions =
           KeyboardOptions(
@@ -87,8 +89,8 @@ fun OnboardingScreen(
         value = uiState.plate,
         onValueChange = viewModel::onPlateChange,
         modifier = Modifier.fillMaxWidth(),
-        label = { Text("License plate") },
-        placeholder = { Text("e.g. ABC-1234") },
+        label = { Text(stringResource(R.string.onboarding_field_license_plate)) },
+        placeholder = { Text(stringResource(R.string.onboarding_field_license_plate_placeholder)) },
         singleLine = true,
         keyboardOptions =
           KeyboardOptions(
@@ -101,7 +103,7 @@ fun OnboardingScreen(
       if (uiState.hasError) {
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-          text = "Something went wrong. Please try again.",
+          text = stringResource(R.string.error_generic),
           color = AppTheme.colorScheme.error,
           style = AppTheme.typography.bodySmall,
         )
@@ -117,7 +119,7 @@ fun OnboardingScreen(
           modifier = Modifier.fillMaxWidth(),
           enabled = uiState.isValid,
         ) {
-          Text("Let's go")
+          Text(stringResource(R.string.onboarding_button_continue))
         }
       }
     }
