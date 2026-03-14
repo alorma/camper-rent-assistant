@@ -84,48 +84,6 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 5
 
-  build-release:
-    name: Build Release AAB
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v6
-
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: adopt
-          java-version: 21
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          gradle-version: wrapper
-          cache-read-only: false
-
-      - name: Create google-services.json
-        run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -d > app/google-services.json
-
-      - name: Decode Keystore
-        run: |
-          mkdir -p certs
-          echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > certs/release.keystore
-
-      - name: Build release AAB
-        run: ./gradlew :app:bundleRelease
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: camperchecks-debug-apk
-          path: app/build/outputs/apk/release/*.apk
-          retention-days: 5
-
   test-functions:
     name: Test Cloud Functions
     runs-on: ubuntu-latest
