@@ -130,7 +130,7 @@ jobs:
         if: steps.changes.outputs.firebase == 'true' || github.event_name == 'workflow_dispatch'
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only firestore:rules,functions --project camperchecks
+          args: deploy --only firestore:rules,firestore:indexes,functions --project camperchecks-490115
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
           PROJECT_PATH: ./firebase
