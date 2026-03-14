@@ -3,7 +3,9 @@ package com.alorma.camperchecks.screens.rentaldetail
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,9 +29,11 @@ import com.alorma.camperchecks.R
 import com.alorma.camperchecks.icons.AppIcons
 import com.alorma.camperchecks.icons.filled.ChevronRight
 import com.alorma.camperchecks.rental.Rental
+import com.alorma.camperchecks.ui.components.loading.FullscreenLoading
 import com.alorma.camperchecks.ui.components.scaffold.AppScaffold
 import com.alorma.camperchecks.ui.components.topbar.NavigationIcon
 import com.alorma.camperchecks.ui.components.topbar.StyledTopAppBar
+import com.alorma.camperchecks.ui.responsive.rememberIsExpanded
 import com.alorma.camperchecks.ui.theme.AppTheme
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -37,7 +41,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun RentalDetailScreen(
   rentalId: String,
-  viewModel: RentalDetailViewModel = koinViewModel(parameters = { parametersOf(rentalId) }),
+  viewModel: RentalDetailViewModel = koinViewModel { parametersOf(rentalId) },
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -46,71 +50,167 @@ fun RentalDetailScreen(
     }
   }
 
+  RentalDetailScreenContent(uiState, viewModel)
+}
+
+@Composable
+private fun RentalDetailScreenContent(
+  uiState: RentalDetailUiState,
+  viewModel: RentalDetailViewModel
+) {
   AppScaffold(
     topBar = {
       StyledTopAppBar(
         title = {
           Text(
-            text = uiState.rental?.referenceId ?: stringResource(R.string.rental_detail_title_fallback),
+            text = if (uiState is RentalDetailUiState.Loaded) {
+              uiState.rental.referenceId
+            } else {
+              stringResource(R.string.rental_detail_title_fallback)
+            },
           )
         },
         navigationIcon = { NavigationIcon() },
       )
     },
   ) { paddingValues ->
-    LazyColumn(
-      modifier = Modifier.fillMaxSize(),
-      contentPadding = PaddingValues(
-        top = paddingValues.calculateTopPadding() + 16.dp,
-        bottom = paddingValues.calculateBottomPadding() + 16.dp,
-        start = 16.dp,
-        end = 16.dp,
+    val isExpanded = rememberIsExpanded()
+
+    when (uiState) {
+      is RentalDetailUiState.Empty -> {}
+      RentalDetailUiState.Loading -> FullscreenLoading()
+      is RentalDetailUiState.Loaded -> {
+        if (isExpanded) {
+          ExpandedContent(paddingValues, uiState, viewModel)
+        } else {
+          CompactContent(paddingValues, uiState, viewModel)
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun CompactContent(
+  paddingValues: PaddingValues,
+  uiState: RentalDetailUiState.Loaded,
+  viewModel: RentalDetailViewModel
+) {
+  LazyColumn(
+    modifier = Modifier.fillMaxSize(),
+    contentPadding = PaddingValues(
+      top = paddingValues.calculateTopPadding() + 16.dp,
+      bottom = paddingValues.calculateBottomPadding() + 16.dp,
+      start = 16.dp,
+      end = 16.dp,
+    ),
+    verticalArrangement = Arrangement.spacedBy(16.dp),
+  ) {
+    item(key = "rental_info") {
+      RentalInfoCard(rental = uiState.rental)
+    }
+
+    item(key = "actions") {
+      Column(
+        verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
+      ) {
+        SectionHeader(title = stringResource(R.string.rental_detail_section_actions))
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        HubActionItem(
+          label = stringResource(R.string.rental_detail_action_checklists),
+          index = 0,
+          count = 4,
+          onClick = { viewModel.navigate(RentalDetailNavigation.Checklists) },
+        )
+
+        HubActionItem(
+          label = stringResource(R.string.rental_detail_action_condition),
+          index = 1,
+          count = 4,
+          onClick = { viewModel.navigate(RentalDetailNavigation.Condition) },
+        )
+
+        HubActionItem(
+          label = stringResource(R.string.rental_detail_action_taxes),
+          index = 2,
+          count = 4,
+          onClick = { viewModel.navigate(RentalDetailNavigation.Taxes) },
+        )
+
+        HubActionItem(
+          label = stringResource(R.string.rental_detail_action_contacts),
+          index = 3,
+          count = 4,
+          onClick = { viewModel.navigate(RentalDetailNavigation.Contacts) },
+        )
+      }
+    }
+  }
+}
+
+@Composable
+private fun ExpandedContent(
+  paddingValues: PaddingValues,
+  uiState: RentalDetailUiState.Loaded,
+  viewModel: RentalDetailViewModel,
+) {
+  Row(
+    modifier = Modifier
+      .fillMaxSize()
+      .padding(
+        top = paddingValues.calculateTopPadding() + 24.dp,
+        bottom = paddingValues.calculateBottomPadding() + 24.dp,
+        start = 24.dp,
+        end = 24.dp,
       ),
-      verticalArrangement = Arrangement.spacedBy(16.dp),
+    horizontalArrangement = Arrangement.spacedBy(24.dp),
+  ) {
+    RentalInfoCard(
+      rental = uiState.rental,
+      modifier = Modifier
+        .weight(1f)
+        .fillMaxHeight(),
+    )
+
+    Column(
+      modifier = Modifier
+        .weight(1f)
+        .fillMaxHeight(),
+      verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
     ) {
-      uiState.rental?.let { rental ->
-        item(key = "rental_info") {
-          RentalInfoCard(rental = rental)
-        }
-      }
+      SectionHeader(title = stringResource(R.string.rental_detail_section_actions))
 
-      item(key = "actions") {
-        Column(
-          verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
-        ) {
-          SectionHeader(title = stringResource(R.string.rental_detail_section_actions))
+      Spacer(modifier = Modifier.height(8.dp))
 
-          Spacer(modifier = Modifier.height(8.dp))
+      HubActionItem(
+        label = stringResource(R.string.rental_detail_action_checklists),
+        index = 0,
+        count = 4,
+        onClick = { viewModel.navigate(RentalDetailNavigation.Checklists) },
+      )
 
-          HubActionItem(
-            label = stringResource(R.string.rental_detail_action_checklists),
-            index = 0,
-            count = 4,
-            onClick = { viewModel.navigate(RentalDetailNavigation.Checklists) },
-          )
+      HubActionItem(
+        label = stringResource(R.string.rental_detail_action_condition),
+        index = 1,
+        count = 4,
+        onClick = { viewModel.navigate(RentalDetailNavigation.Condition) },
+      )
 
-          HubActionItem(
-            label = stringResource(R.string.rental_detail_action_condition),
-            index = 1,
-            count = 4,
-            onClick = { viewModel.navigate(RentalDetailNavigation.Condition) },
-          )
+      HubActionItem(
+        label = stringResource(R.string.rental_detail_action_taxes),
+        index = 2,
+        count = 4,
+        onClick = { viewModel.navigate(RentalDetailNavigation.Taxes) },
+      )
 
-          HubActionItem(
-            label = stringResource(R.string.rental_detail_action_taxes),
-            index = 2,
-            count = 4,
-            onClick = { viewModel.navigate(RentalDetailNavigation.Taxes) },
-          )
-
-          HubActionItem(
-            label = stringResource(R.string.rental_detail_action_contacts),
-            index = 3,
-            count = 4,
-            onClick = { viewModel.navigate(RentalDetailNavigation.Contacts) },
-          )
-        }
-      }
+      HubActionItem(
+        label = stringResource(R.string.rental_detail_action_contacts),
+        index = 3,
+        count = 4,
+        onClick = { viewModel.navigate(RentalDetailNavigation.Contacts) },
+      )
     }
   }
 }
@@ -129,9 +229,9 @@ private fun SectionHeader(title: String) {
 }
 
 @Composable
-private fun RentalInfoCard(rental: Rental) {
+private fun RentalInfoCard(rental: Rental, modifier: Modifier = Modifier) {
   Card(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = modifier.fillMaxWidth(),
     colors =
       CardDefaults.cardColors(
         containerColor = AppTheme.colorScheme.primaryContainer,
@@ -178,7 +278,7 @@ private fun HubActionItem(
       containerColor = AppTheme.colorScheme.primaryContainer.copy(
         alpha = AppTheme.dims.dim3,
       ),
-      contentColor =  AppTheme.colorScheme.onPrimaryContainer,
+      contentColor = AppTheme.colorScheme.onPrimaryContainer,
     ),
     shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
     content = { Text(text = label) },
