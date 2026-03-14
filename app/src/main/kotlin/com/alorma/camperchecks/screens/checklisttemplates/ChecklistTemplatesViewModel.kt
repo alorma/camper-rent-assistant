@@ -20,7 +20,7 @@ class ChecklistTemplatesViewModel(
     ChecklistTemplatesNavigationSideEffect,
     ChecklistTemplatesSideEffect,
   >() {
-  private val selectedPhase = MutableStateFlow(ChecklistPhase.PRE_WORK)
+  private val selectedPhase = MutableStateFlow<ChecklistPhase>(ChecklistPhase.Before)
   private val dialogState = MutableStateFlow<ChecklistTemplateDialogState>(ChecklistTemplateDialogState.Hidden)
 
   val uiState: StateFlow<ChecklistTemplatesUiState> =
@@ -88,7 +88,7 @@ class ChecklistTemplatesViewModel(
 }
 
 data class ChecklistTemplatesUiState(
-  val selectedPhase: ChecklistPhase = ChecklistPhase.PRE_WORK,
+  val selectedPhase: ChecklistPhase = ChecklistPhase.Before,
   val templatesByPhase: Map<ChecklistPhase, List<ChecklistTemplate>> = emptyMap(),
   val dialogState: ChecklistTemplateDialogState = ChecklistTemplateDialogState.Hidden,
 ) {

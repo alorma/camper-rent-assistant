@@ -36,7 +36,7 @@ class FirebaseChecklistTemplateDataSource(
       .set(
         mapOf(
           "id" to doc.id,
-          "phase" to phase.name,
+          "phase" to phaseToId(phase),
           "title" to title,
         ),
       ).await()
@@ -65,7 +65,7 @@ class FirebaseChecklistTemplateDataSource(
     val id = getString("id") ?: return null
     val phaseStr = getString("phase") ?: return null
     val title = getString("title") ?: return null
-    val phase = runCatching { ChecklistPhase.valueOf(phaseStr) }.getOrNull() ?: return null
+    val phase = phaseIdToPhase(phaseStr) ?: return null
     return ChecklistTemplate(
       id = id,
       phase = phase,

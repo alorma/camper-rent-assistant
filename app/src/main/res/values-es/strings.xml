@@ -51,6 +51,13 @@
     <string name="rentals_list_empty_title">Sin alquileres aún</string>
     <string name="rentals_list_empty_subtitle">Añade tu primer alquiler para empezar</string>
 
+    <!-- Checklist phases -->
+    <string name="checklist_phase_pre_work">Previa</string>
+    <string name="checklist_phase_renting_day">Día de alquiler</string>
+    <string name="checklist_phase_during_renting">Durante el alquiler</string>
+    <string name="checklist_phase_end_day">Día de devolución</string>
+    <string name="checklist_phase_after_rent">Postventa</string>
+
     <!-- Rentals list screen — checklist templates entry -->
     <string name="rentals_list_checklist_templates">Plantillas</string>
 

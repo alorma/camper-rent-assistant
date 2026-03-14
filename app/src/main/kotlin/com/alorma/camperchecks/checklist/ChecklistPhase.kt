@@ -1,11 +1,14 @@
 package com.alorma.camperchecks.checklist
 
-enum class ChecklistPhase(
-  val displayName: String,
-) {
-  PRE_WORK("Pre-work"),
-  RENTING_DAY("Renting day"),
-  DURING_RENTING("During renting"),
-  END_DAY("End day"),
-  AFTER_RENT("After rent"),
+sealed class ChecklistPhase {
+  data object Before : ChecklistPhase()
+  data object StartDay : ChecklistPhase()
+  data object Renting : ChecklistPhase()
+  data object EndDay : ChecklistPhase()
+  data object After : ChecklistPhase()
+  companion object {
+    fun values(): List<ChecklistPhase> {
+      return listOf(Before, StartDay, Renting, EndDay, After)
+    }
+  }
 }
