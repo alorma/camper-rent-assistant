@@ -94,7 +94,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: npm install
@@ -123,13 +123,13 @@ jobs:
         if: steps.changes.outputs.firebase == 'true'
         uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Deploy Firestore rules and Functions
         if: steps.changes.outputs.firebase == 'true'
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only firestore:rules,firestore:indexes,functions --project camperchecks
+          args: deploy --only firestore:rules,firestore:indexes,functions --project camper-checks
         env:
           GCP_SA_KEY: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           PROJECT_PATH: ./firebase
