@@ -27,7 +27,7 @@ val authModule =
     }
 
     single<WebClientId> {
-      WebClientId("412331751935-hju27jtkcmf7gsivglgc1ni8t9g0tt93.apps.googleusercontent.com")
+      WebClientId("762759002337-a71vvokcotsjvjse882htref2sbdktlo.apps.googleusercontent.com")
     }
 
     single<Session> {
