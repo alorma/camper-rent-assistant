@@ -22,7 +22,7 @@ jobs:
       - name: Deploy Firestore rules and Functions
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only firestore:rules,firestore:indexes,functions --project camperchecks
+          args: deploy --only firestore:rules,firestore:indexes,functions --project camper-checks
         env:
           GCP_SA_KEY: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           PROJECT_PATH: ./firebase

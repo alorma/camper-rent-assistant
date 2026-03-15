@@ -94,7 +94,10 @@ class FirebaseRentalDataSource(
 
   private fun DocumentSnapshot.toRental(): Rental? {
     val id = getString("id") ?: return null
-    val providerId = getString("providerId") ?: return null
+    val providerId = getString("providerId") ?: run {
+      Timber.w("Document $this missing providerId, data: ${data}")
+      return null
+    }
     val referenceId = getString("referenceId") ?: return null
     val vehicleId = getString("vehicleId") ?: return null
     val startAtStr = getString("startAt") ?: return null

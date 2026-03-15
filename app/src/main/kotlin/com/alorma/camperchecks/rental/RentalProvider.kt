@@ -15,9 +15,12 @@ sealed class RentalProvider(
   ) : RentalProvider(id = providerId, displayName = providerDisplayName)
 
   companion object {
-    val all: List<RentalProvider> = listOf(Yescapa)
+    val all: List<RentalProvider> get() = listOf(Yescapa)
 
     fun fromId(id: String): RentalProvider =
-      all.find { it.id == id } ?: Other(providerId = id, providerDisplayName = "Other")
+      when (id) {
+        Yescapa.id -> Yescapa
+        else -> Other(providerId = id, providerDisplayName = "Other")
+      }
   }
 }
