@@ -31,7 +31,8 @@ class RentalDetailViewModel(
 
   override fun navigate(navigation: RentalDetailNavigation) {
     when (navigation) {
-      RentalDetailNavigation.Checklists -> {}
+      RentalDetailNavigation.Checklists ->
+        emitNavigationSideEffect(RentalDetailNavigationSideEffect.NavigateToChecklists)
       RentalDetailNavigation.Condition -> {}
       RentalDetailNavigation.Taxes -> {}
       RentalDetailNavigation.Contacts -> {}
@@ -55,6 +56,8 @@ sealed interface RentalDetailNavigation {
   data object Contacts : RentalDetailNavigation
 }
 
-sealed interface RentalDetailNavigationSideEffect
+sealed interface RentalDetailNavigationSideEffect {
+  data object NavigateToChecklists : RentalDetailNavigationSideEffect
+}
 
 sealed interface RentalDetailSideEffect

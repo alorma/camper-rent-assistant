@@ -41,12 +41,16 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun RentalDetailScreen(
   rentalId: String,
+  onNavigateToChecklists: () -> Unit,
   viewModel: RentalDetailViewModel = koinViewModel { parametersOf(rentalId) },
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   LaunchedEffect(Unit) {
     viewModel.navigationSideEffects.collect { effect ->
+      when (effect) {
+        RentalDetailNavigationSideEffect.NavigateToChecklists -> onNavigateToChecklists()
+      }
     }
   }
 
