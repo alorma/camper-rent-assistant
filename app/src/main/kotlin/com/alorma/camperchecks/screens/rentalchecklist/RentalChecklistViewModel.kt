@@ -48,6 +48,18 @@ class RentalChecklistViewModel(
       rentalChecklistDataSource.setChecked(rentalId, item.id, !item.checked)
     }
   }
+
+  fun onAddItemClick() {
+    emitSideEffect(RentalChecklistSideEffect.ShowAddItemDialog)
+  }
+
+  fun addItem(phase: ChecklistPhase, title: String) {
+    val trimmed = title.trim()
+    if (trimmed.isBlank()) return
+    viewModelScope.launch {
+      rentalChecklistDataSource.addItem(rentalId, phase, trimmed)
+    }
+  }
 }
 
 sealed class RentalChecklistUiState {
@@ -66,4 +78,6 @@ sealed interface RentalChecklistNavigationSideEffect {
   data object NavigateBack : RentalChecklistNavigationSideEffect
 }
 
-sealed interface RentalChecklistSideEffect
+sealed interface RentalChecklistSideEffect {
+  data object ShowAddItemDialog : RentalChecklistSideEffect
+}

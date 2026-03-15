@@ -5,5 +5,5 @@ data class RentalChecklistItem(
   val phase: ChecklistPhase,
   val title: String,
   val checked: Boolean,
-  val templateId: String,
+  val templateId: String?,
 )

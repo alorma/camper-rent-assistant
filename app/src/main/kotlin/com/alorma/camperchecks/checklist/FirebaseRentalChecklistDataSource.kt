@@ -36,12 +36,25 @@ class FirebaseRentalChecklistDataSource(
       .await()
   }
 
+  override suspend fun addItem(rentalId: String, phase: ChecklistPhase, title: String) {
+    val col = firestoreProvider.rentalCollection(rentalId, "checklist")
+    val doc = col.document()
+    doc.set(
+      mapOf(
+        "id" to doc.id,
+        "phase" to templateDataSource.phaseToId(phase),
+        "title" to title,
+        "checked" to false,
+      ),
+    ).await()
+  }
+
   private fun DocumentSnapshot.toRentalChecklistItem(): RentalChecklistItem? {
     val id = getString("id") ?: return null
     val phaseStr = getString("phase") ?: return null
     val title = getString("title") ?: return null
     val checked = getBoolean("checked") ?: false
-    val templateId = getString("templateId") ?: return null
+    val templateId = getString("templateId")
     val phase = templateDataSource.phaseIdToPhase(phaseStr) ?: return null
     return RentalChecklistItem(
       id = id,

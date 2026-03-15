@@ -73,8 +73,11 @@
 
     <!-- Rental checklist screen -->
     <string name="rental_checklist_title">Checklist</string>
+    <string name="rental_checklist_add_item">Add item</string>
     <string name="rental_checklist_empty_title">No checklist items</string>
     <string name="rental_checklist_empty_subtitle">Add templates in Settings to populate this checklist</string>
+    <string name="rental_checklist_dialog_add_title">Add item</string>
+    <string name="rental_checklist_dialog_item_label">Item title</string>
 
     <!-- Rental detail screen -->
     <string name="rental_detail_title_fallback">Rental detail</string>
