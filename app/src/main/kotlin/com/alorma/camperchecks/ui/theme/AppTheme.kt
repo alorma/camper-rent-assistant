@@ -50,14 +50,15 @@ fun AppThemeContent(
 ) {
   val systemInDarkTheme = isSystemInDarkTheme()
 
-  val dims = AppDims(
-    noDim = 1f,
-    dim1 = 0.72f,
-    dim2 = 0.68f,
-    dim3 = 0.40f,
-    dim4 = 0.16f,
-    dim5 = 0.08f,
-  )
+  val dims =
+    AppDims(
+      noDim = 1f,
+      dim1 = 0.72f,
+      dim2 = 0.68f,
+      dim3 = 0.40f,
+      dim4 = 0.16f,
+      dim5 = 0.08f,
+    )
 
   val darkTheme =
     when (themePreferences.themeMode.value) {
@@ -113,14 +114,15 @@ fun InternalTheme(
     LocalAppDims provides dims,
     LocalDarkMode provides darkMode,
   ) {
-    val settingsColors = ListItemDefaults.colors(
-      containerColor = colorScheme.surfaceContainer,
-      contentColor = colorScheme.primary,
-      overlineContentColor = colorScheme.onSurface,
-      supportingContentColor = colorScheme.onSurface,
-      leadingContentColor = colorScheme.primary,
-      trailingContentColor = colorScheme.primary,
-    )
+    val settingsColors =
+      ListItemDefaults.colors(
+        containerColor = colorScheme.surfaceContainer,
+        contentColor = colorScheme.primary,
+        overlineContentColor = colorScheme.onSurface,
+        supportingContentColor = colorScheme.onSurface,
+        leadingContentColor = colorScheme.primary,
+        trailingContentColor = colorScheme.primary,
+      )
     CompositionLocalProvider(LocalSettingsTileColors provides settingsColors) {
       content()
     }

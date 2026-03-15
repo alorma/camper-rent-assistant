@@ -41,12 +41,16 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun RentalDetailScreen(
   rentalId: String,
+  onNavigateToChecklists: () -> Unit,
   viewModel: RentalDetailViewModel = koinViewModel { parametersOf(rentalId) },
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   LaunchedEffect(Unit) {
     viewModel.navigationSideEffects.collect { effect ->
+      when (effect) {
+        RentalDetailNavigationSideEffect.NavigateToChecklists -> onNavigateToChecklists()
+      }
     }
   }
 
@@ -56,18 +60,19 @@ fun RentalDetailScreen(
 @Composable
 private fun RentalDetailScreenContent(
   uiState: RentalDetailUiState,
-  viewModel: RentalDetailViewModel
+  viewModel: RentalDetailViewModel,
 ) {
   AppScaffold(
     topBar = {
       StyledTopAppBar(
         title = {
           Text(
-            text = if (uiState is RentalDetailUiState.Loaded) {
-              uiState.rental.referenceId
-            } else {
-              stringResource(R.string.rental_detail_title_fallback)
-            },
+            text =
+              if (uiState is RentalDetailUiState.Loaded) {
+                uiState.rental.referenceId
+              } else {
+                stringResource(R.string.rental_detail_title_fallback)
+              },
           )
         },
         navigationIcon = { NavigationIcon() },
@@ -94,16 +99,17 @@ private fun RentalDetailScreenContent(
 private fun CompactContent(
   paddingValues: PaddingValues,
   uiState: RentalDetailUiState.Loaded,
-  viewModel: RentalDetailViewModel
+  viewModel: RentalDetailViewModel,
 ) {
   LazyColumn(
     modifier = Modifier.fillMaxSize(),
-    contentPadding = PaddingValues(
-      top = paddingValues.calculateTopPadding() + 16.dp,
-      bottom = paddingValues.calculateBottomPadding() + 16.dp,
-      start = 16.dp,
-      end = 16.dp,
-    ),
+    contentPadding =
+      PaddingValues(
+        top = paddingValues.calculateTopPadding() + 16.dp,
+        bottom = paddingValues.calculateBottomPadding() + 16.dp,
+        start = 16.dp,
+        end = 16.dp,
+      ),
     verticalArrangement = Arrangement.spacedBy(16.dp),
   ) {
     item(key = "rental_info") {
@@ -157,27 +163,30 @@ private fun ExpandedContent(
   viewModel: RentalDetailViewModel,
 ) {
   Row(
-    modifier = Modifier
-      .fillMaxSize()
-      .padding(
-        top = paddingValues.calculateTopPadding() + 24.dp,
-        bottom = paddingValues.calculateBottomPadding() + 24.dp,
-        start = 24.dp,
-        end = 24.dp,
-      ),
+    modifier =
+      Modifier
+        .fillMaxSize()
+        .padding(
+          top = paddingValues.calculateTopPadding() + 24.dp,
+          bottom = paddingValues.calculateBottomPadding() + 24.dp,
+          start = 24.dp,
+          end = 24.dp,
+        ),
     horizontalArrangement = Arrangement.spacedBy(24.dp),
   ) {
     RentalInfoCard(
       rental = uiState.rental,
-      modifier = Modifier
-        .weight(1f)
-        .fillMaxHeight(),
+      modifier =
+        Modifier
+          .weight(1f)
+          .fillMaxHeight(),
     )
 
     Column(
-      modifier = Modifier
-        .weight(1f)
-        .fillMaxHeight(),
+      modifier =
+        Modifier
+          .weight(1f)
+          .fillMaxHeight(),
       verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
     ) {
       SectionHeader(title = stringResource(R.string.rental_detail_section_actions))
@@ -229,7 +238,10 @@ private fun SectionHeader(title: String) {
 }
 
 @Composable
-private fun RentalInfoCard(rental: Rental, modifier: Modifier = Modifier) {
+private fun RentalInfoCard(
+  rental: Rental,
+  modifier: Modifier = Modifier,
+) {
   Card(
     modifier = modifier.fillMaxWidth(),
     colors =
@@ -274,12 +286,14 @@ private fun HubActionItem(
 ) {
   SegmentedListItem(
     onClick = onClick,
-    colors = ListItemDefaults.segmentedColors(
-      containerColor = AppTheme.colorScheme.primaryContainer.copy(
-        alpha = AppTheme.dims.dim3,
+    colors =
+      ListItemDefaults.segmentedColors(
+        containerColor =
+          AppTheme.colorScheme.primaryContainer.copy(
+            alpha = AppTheme.dims.dim3,
+          ),
+        contentColor = AppTheme.colorScheme.onPrimaryContainer,
       ),
-      contentColor = AppTheme.colorScheme.onPrimaryContainer,
-    ),
     shapes = ListItemDefaults.segmentedShapes(index = index, count = count),
     content = { Text(text = label) },
     trailingContent = {

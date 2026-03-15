@@ -20,6 +20,8 @@ import com.alorma.camperchecks.screens.login.LoginRoute
 import com.alorma.camperchecks.screens.login.LoginScreen
 import com.alorma.camperchecks.screens.onboarding.OnboardingRoute
 import com.alorma.camperchecks.screens.onboarding.OnboardingScreen
+import com.alorma.camperchecks.screens.rentalchecklist.RentalChecklistRoute
+import com.alorma.camperchecks.screens.rentalchecklist.RentalChecklistScreen
 import com.alorma.camperchecks.screens.rentaldetail.RentalDetailRoute
 import com.alorma.camperchecks.screens.rentaldetail.RentalDetailScreen
 import com.alorma.camperchecks.screens.rentalslist.RentalsListRoute
@@ -89,6 +91,13 @@ private fun AppNavGraph(startKey: NavKey) {
         entry<RentalDetailRoute> { route ->
           RentalDetailScreen(
             rentalId = route.rentalId,
+            onNavigateToChecklists = { appBackStack.add(RentalChecklistRoute(route.rentalId)) },
+          )
+        }
+        entry<RentalChecklistRoute> { route ->
+          RentalChecklistScreen(
+            rentalId = route.rentalId,
+            onNavigateBack = { appBackStack.removeLast() },
           )
         }
         entry<ChecklistTemplatesRoute> {
