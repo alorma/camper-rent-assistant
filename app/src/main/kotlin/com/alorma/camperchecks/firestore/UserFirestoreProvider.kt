@@ -13,5 +13,8 @@ interface UserFirestoreProvider {
    * Returns the Firestore collection at /users/{uid}/rentals/{rentalId}/{collection}.
    * Throws if called when no user is authenticated.
    */
-  fun rentalCollection(rentalId: String, name: String): CollectionReference
+  fun rentalCollection(
+    rentalId: String,
+    name: String,
+  ): CollectionReference
 }

@@ -4,13 +4,10 @@ import androidx.lifecycle.viewModelScope
 import com.alorma.camperchecks.rental.Rental
 import com.alorma.camperchecks.rental.RentalDataSource
 import com.alorma.camperchecks.ui.base.BaseViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlin.time.Duration.Companion.seconds
 
 class RentalDetailViewModel(
   rentalId: String,
@@ -22,8 +19,7 @@ class RentalDetailViewModel(
       .map { result ->
         val rental = result.getOrNull()
         if (rental != null) RentalDetailUiState.Loaded(rental) else RentalDetailUiState.Empty
-      }
-      .stateIn(
+      }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = RentalDetailUiState.Loading,
@@ -42,8 +38,12 @@ class RentalDetailViewModel(
 
 sealed class RentalDetailUiState {
   data object Loading : RentalDetailUiState()
+
   data object Empty : RentalDetailUiState()
-  data class Loaded(val rental: Rental) : RentalDetailUiState()
+
+  data class Loaded(
+    val rental: Rental,
+  ) : RentalDetailUiState()
 }
 
 sealed interface RentalDetailNavigation {

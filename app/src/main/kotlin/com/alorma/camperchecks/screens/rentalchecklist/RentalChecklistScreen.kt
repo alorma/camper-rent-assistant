@@ -65,36 +65,37 @@ fun RentalChecklistScreen(
           var selectedPhase by mutableStateOf<ChecklistPhase>(ChecklistPhase.Before)
           var title by mutableStateOf("")
 
-          val result = dialogState.showAlertDialog(
-            title = { Text(stringResource(R.string.rental_checklist_dialog_add_title)) },
-            content = {
-              Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                PrimaryScrollableTabRow(
-                  selectedTabIndex = phases.indexOf(selectedPhase),
-                  edgePadding = 0.dp,
-                  divider = {},
-                ) {
-                  phases.forEach { phase ->
-                    Tab(
-                      selected = phase == selectedPhase,
-                      onClick = { selectedPhase = phase },
-                      text = { Text(phase.label()) },
-                    )
+          val result =
+            dialogState.showAlertDialog(
+              title = { Text(stringResource(R.string.rental_checklist_dialog_add_title)) },
+              content = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                  PrimaryScrollableTabRow(
+                    selectedTabIndex = phases.indexOf(selectedPhase),
+                    edgePadding = 0.dp,
+                    divider = {},
+                  ) {
+                    phases.forEach { phase ->
+                      Tab(
+                        selected = phase == selectedPhase,
+                        onClick = { selectedPhase = phase },
+                        text = { Text(phase.label()) },
+                      )
+                    }
                   }
+                  OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text(stringResource(R.string.rental_checklist_dialog_item_label)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                  )
                 }
-                OutlinedTextField(
-                  value = title,
-                  onValueChange = { title = it },
-                  label = { Text(stringResource(R.string.rental_checklist_dialog_item_label)) },
-                  singleLine = true,
-                  modifier = Modifier.fillMaxWidth(),
-                )
-              }
-            },
-            positiveButton = { Text(stringResource(R.string.ok)) },
-            negativeButton = { Text(stringResource(R.string.cancel)) },
-            type = AppFeedbackType.Info,
-          )
+              },
+              positiveButton = { Text(stringResource(R.string.ok)) },
+              negativeButton = { Text(stringResource(R.string.cancel)) },
+              type = AppFeedbackType.Info,
+            )
 
           if (result == DialogResult.Positive) {
             viewModel.addItem(selectedPhase, title)
@@ -125,11 +126,12 @@ fun RentalChecklistScreen(
     when (val state = uiState) {
       RentalChecklistUiState.Loading -> FullscreenLoading()
       is RentalChecklistUiState.Empty -> EmptyChecklistContent(paddingValues)
-      is RentalChecklistUiState.Loaded -> ChecklistContent(
-        itemsByPhase = state.itemsByPhase,
-        onToggleItem = viewModel::onToggleItem,
-        paddingValues = paddingValues,
-      )
+      is RentalChecklistUiState.Loaded ->
+        ChecklistContent(
+          itemsByPhase = state.itemsByPhase,
+          onToggleItem = viewModel::onToggleItem,
+          paddingValues = paddingValues,
+        )
     }
   }
 }
@@ -138,12 +140,13 @@ fun RentalChecklistScreen(
 private fun EmptyChecklistContent(paddingValues: PaddingValues) {
   LazyColumn(
     modifier = Modifier.fillMaxSize(),
-    contentPadding = PaddingValues(
-      top = paddingValues.calculateTopPadding() + 48.dp,
-      bottom = paddingValues.calculateBottomPadding() + 16.dp,
-      start = 16.dp,
-      end = 16.dp,
-    ),
+    contentPadding =
+      PaddingValues(
+        top = paddingValues.calculateTopPadding() + 48.dp,
+        bottom = paddingValues.calculateBottomPadding() + 16.dp,
+        start = 16.dp,
+        end = 16.dp,
+      ),
   ) {
     item {
       Text(
@@ -168,10 +171,11 @@ private fun ChecklistContent(
 ) {
   LazyColumn(
     modifier = Modifier.fillMaxSize(),
-    contentPadding = PaddingValues(
-      top = paddingValues.calculateTopPadding(),
-      bottom = paddingValues.calculateBottomPadding() + 16.dp,
-    ),
+    contentPadding =
+      PaddingValues(
+        top = paddingValues.calculateTopPadding(),
+        bottom = paddingValues.calculateBottomPadding() + 16.dp,
+      ),
   ) {
     itemsByPhase.forEach { (phase, items) ->
       item(key = "header_${phase::class.simpleName}") {

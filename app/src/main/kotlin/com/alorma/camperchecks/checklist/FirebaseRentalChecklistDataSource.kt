@@ -28,7 +28,11 @@ class FirebaseRentalChecklistDataSource(
       awaitClose { listener.remove() }
     }
 
-  override suspend fun setChecked(rentalId: String, itemId: String, checked: Boolean) {
+  override suspend fun setChecked(
+    rentalId: String,
+    itemId: String,
+    checked: Boolean,
+  ) {
     firestoreProvider
       .rentalCollection(rentalId, "checklist")
       .document(itemId)
@@ -36,17 +40,22 @@ class FirebaseRentalChecklistDataSource(
       .await()
   }
 
-  override suspend fun addItem(rentalId: String, phase: ChecklistPhase, title: String) {
+  override suspend fun addItem(
+    rentalId: String,
+    phase: ChecklistPhase,
+    title: String,
+  ) {
     val col = firestoreProvider.rentalCollection(rentalId, "checklist")
     val doc = col.document()
-    doc.set(
-      mapOf(
-        "id" to doc.id,
-        "phase" to templateDataSource.phaseToId(phase),
-        "title" to title,
-        "checked" to false,
-      ),
-    ).await()
+    doc
+      .set(
+        mapOf(
+          "id" to doc.id,
+          "phase" to templateDataSource.phaseToId(phase),
+          "title" to title,
+          "checked" to false,
+        ),
+      ).await()
   }
 
   private fun DocumentSnapshot.toRentalChecklistItem(): RentalChecklistItem? {

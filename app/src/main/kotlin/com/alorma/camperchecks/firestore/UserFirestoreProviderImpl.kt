@@ -16,13 +16,18 @@ class UserFirestoreProviderImpl(
     return firestore.collection("users").document(uid).collection(name)
   }
 
-  override fun rentalCollection(rentalId: String, name: String): CollectionReference {
+  override fun rentalCollection(
+    rentalId: String,
+    name: String,
+  ): CollectionReference {
     val uid =
       (session.state.value as? SessionState.Authenticated)?.user?.uid
         ?: error("Cannot access Firestore rental collection '$name': user not authenticated")
     return firestore
-      .collection("users").document(uid)
-      .collection("rentals").document(rentalId)
+      .collection("users")
+      .document(uid)
+      .collection("rentals")
+      .document(rentalId)
       .collection(name)
   }
 }

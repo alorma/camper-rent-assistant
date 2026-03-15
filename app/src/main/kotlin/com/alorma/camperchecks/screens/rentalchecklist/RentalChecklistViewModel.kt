@@ -22,15 +22,16 @@ class RentalChecklistViewModel(
         if (items.isEmpty()) {
           RentalChecklistUiState.Empty
         } else {
-          val byPhase = ChecklistPhase.values()
-            .mapNotNull { phase ->
-              val phaseItems = items.filter { it.phase == phase }
-              if (phaseItems.isEmpty()) null else phase to phaseItems
-            }
+          val byPhase =
+            ChecklistPhase
+              .values()
+              .mapNotNull { phase ->
+                val phaseItems = items.filter { it.phase == phase }
+                if (phaseItems.isEmpty()) null else phase to phaseItems
+              }
           RentalChecklistUiState.Loaded(itemsByPhase = byPhase)
         }
-      }
-      .stateIn(
+      }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = RentalChecklistUiState.Loading,
@@ -53,7 +54,10 @@ class RentalChecklistViewModel(
     emitSideEffect(RentalChecklistSideEffect.ShowAddItemDialog)
   }
 
-  fun addItem(phase: ChecklistPhase, title: String) {
+  fun addItem(
+    phase: ChecklistPhase,
+    title: String,
+  ) {
     val trimmed = title.trim()
     if (trimmed.isBlank()) return
     viewModelScope.launch {
@@ -64,7 +68,9 @@ class RentalChecklistViewModel(
 
 sealed class RentalChecklistUiState {
   data object Loading : RentalChecklistUiState()
+
   data object Empty : RentalChecklistUiState()
+
   data class Loaded(
     val itemsByPhase: List<Pair<ChecklistPhase, List<RentalChecklistItem>>>,
   ) : RentalChecklistUiState()
