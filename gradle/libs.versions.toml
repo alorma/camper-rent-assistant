@@ -47,7 +47,7 @@ kotlinx-coroutines-test = "1.10.2"
 robolectric = "4.15"
 
 # Firebase
-firebase-bom = "34.10.0"
+firebase-bom = "34.11.0"
 
 # Auth / Credential Manager
 androidx-credentials = "1.6.0-rc02"
